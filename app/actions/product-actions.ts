@@ -47,7 +47,7 @@ export async function getProducts(options?: {
     });
   } catch (error) {
     console.error("Lỗi khi lấy danh sách sản phẩm:", error);
-    throw new Error("Không thể tải danh sách sản phẩm.");
+    return [];
   }
 }
 

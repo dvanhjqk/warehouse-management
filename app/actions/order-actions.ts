@@ -92,7 +92,7 @@ export async function getOrders(options?: {
     });
   } catch (error) {
     console.error("Lỗi khi lấy danh sách đơn hàng:", error);
-    throw new Error("Không thể tải danh sách đơn hàng.");
+    return [];
   }
 }
 
@@ -120,8 +120,6 @@ export async function getOrderById(id: string) {
 
 /**
  * Tạo mới đơn hàng thủ công
- * Hỗ trợ chọn khách hàng có sẵn HOẶC tạo nhanh khách hàng mới
- * Tự động tính toán tổng tiền totalAmount
  */
 export async function createOrder(input: CreateOrderInput): Promise<OrderActionResult> {
   try {
@@ -196,6 +194,7 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderActionR
     revalidatePath("/inventory");
     revalidatePath("/customers");
     revalidatePath("/");
+    revalidatePath("/analytics");
 
     return { success: true, order: createdOrder };
   } catch (error: unknown) {
@@ -209,7 +208,6 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderActionR
 
 /**
  * Chỉnh sửa đơn hàng (Chỉ áp dụng khi đơn hàng ở trạng thái PENDING)
- * Cho phép thêm đồ, sửa số lượng, đổi giá hoặc đổi khách hàng
  */
 export async function updateOrder(input: UpdateOrderInput): Promise<OrderActionResult> {
   try {
@@ -270,6 +268,7 @@ export async function updateOrder(input: UpdateOrderInput): Promise<OrderActionR
     revalidatePath("/inventory");
     revalidatePath("/customers");
     revalidatePath("/");
+    revalidatePath("/analytics");
 
     return { success: true, order: updatedOrder };
   } catch (error: unknown) {
@@ -283,11 +282,6 @@ export async function updateOrder(input: UpdateOrderInput): Promise<OrderActionR
 
 /**
  * Xử lý cập nhật trạng thái đơn hàng (Sử dụng Prisma Transaction)
- * Logic Nghiệp vụ Trừ Kho:
- * - Khi chuyển trạng thái sang DELIVERED: Kiểm tra tồn kho từng sản phẩm.
- *   Nếu đủ hàng -> Trừ stock của từng Product tương ứng.
- *   Nếu thiếu hàng -> Throw Error cụ thể và KHÔNG đổi trạng thái.
- * - Nếu đơn DELIVERED bị đổi sang CANCELLED hoặc trạng thái khác -> Hoàn lại tồn kho cho Product.
  */
 export async function updateOrderStatus(
   orderId: string,
@@ -373,6 +367,7 @@ export async function updateOrderStatus(
     revalidatePath("/inventory");
     revalidatePath("/customers");
     revalidatePath("/");
+    revalidatePath("/analytics");
 
     return { success: true, order: updatedOrder };
   } catch (error: unknown) {
@@ -418,6 +413,7 @@ export async function deleteOrder(id: string): Promise<{ success: boolean; error
     revalidatePath("/inventory");
     revalidatePath("/customers");
     revalidatePath("/");
+    revalidatePath("/analytics");
 
     return { success: true };
   } catch (error: unknown) {
