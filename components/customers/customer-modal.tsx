@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
 import { createCustomer, updateCustomer } from "@/app/actions/customer-actions";
 import { Customer } from "@prisma/client";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, User, Phone, MapPin } from "lucide-react";
 
 interface CustomerModalProps {
   isOpen: boolean;
@@ -85,23 +85,25 @@ export function CustomerModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEditing ? "Chỉnh sửa khách hàng" : "Thêm khách hàng mới"}
+      title={isEditing ? "Chỉnh sửa thông tin khách hàng" : "Thêm khách hàng mới"}
       description={
         isEditing
           ? "Cập nhật thông tin liên hệ của khách hàng"
           : "Thêm thông tin khách hàng mới vào danh bạ"
       }
+      maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2">
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5 animate-in fade-in">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            <span>{error}</span>
+            <span className="font-semibold">{error}</span>
           </div>
         )}
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+            <User className="w-3.5 h-3.5 text-indigo-600" />
             Họ và tên khách hàng <span className="text-rose-500">*</span>
           </label>
           <input
@@ -109,13 +111,14 @@ export function CustomerModal({
             required
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Ví dụ: Nguyễn Văn A"
-            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+            placeholder="Ví dụ: Nguyễn Văn An"
+            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-semibold shadow-2xs"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+            <Phone className="w-3.5 h-3.5 text-indigo-600" />
             Số điện thoại <span className="text-rose-500">*</span>
           </label>
           <input
@@ -126,12 +129,13 @@ export function CustomerModal({
               setFormData({ ...formData, phone: e.target.value })
             }
             placeholder="Ví dụ: 0901234567"
-            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-mono"
+            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-mono font-bold shadow-2xs"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-indigo-600" />
             Địa chỉ nhận hàng
           </label>
           <textarea
@@ -141,7 +145,7 @@ export function CustomerModal({
               setFormData({ ...formData, address: e.target.value })
             }
             placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
-            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-medium shadow-2xs"
           />
         </div>
 
@@ -149,14 +153,14 @@ export function CustomerModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold"
+            className="px-5 py-2.5 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition-all"
           >
             Hủy bỏ
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-50 active:scale-95"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             <span>{isEditing ? "Lưu thay đổi" : "Tạo khách hàng"}</span>

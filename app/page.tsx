@@ -14,6 +14,10 @@ import {
   TrendingUp,
   Package,
   CheckCircle2,
+  Plus,
+  PackagePlus,
+  BarChart3,
+  Layers,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -22,24 +26,46 @@ export default async function DashboardPage() {
   const stats = await getDashboardStats();
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 text-white p-6 sm:p-8 shadow-xl">
-        <div className="relative z-10 max-w-2xl">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-blue-100 backdrop-blur-md mb-3 border border-white/10">
-            <TrendingUp className="w-3.5 h-3.5" />
-            Hệ thống Quản lý Bán hàng Cá nhân
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-            Chào mừng trở lại! 👋
-          </h1>
-          <p className="mt-2 text-sm text-blue-100/90 leading-relaxed">
-            Dưới đây là bức tranh toàn cảnh về tình hình kho hàng, số lượng đơn chờ xử lý và doanh thu thực tế đã giao hôm nay.
-          </p>
+    <div className="space-y-8 animate-in fade-in duration-300">
+      {/* Hero Spotlight Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 shadow-xl border border-slate-800/80">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="max-w-xl space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 backdrop-blur-md">
+              <TrendingUp className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Hệ thống Quản lý Bán hàng Cá nhân</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              Chào mừng bạn trở lại! 👋
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+              Báo cáo thời gian thực về tình hình tồn kho, đơn hàng cần đóng gói và doanh thu thực tế đã thu được.
+            </p>
+          </div>
+
+          {/* Quick Action Buttons on Hero */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <Link
+              href="/orders"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all active:scale-95"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Tạo đơn mới</span>
+            </Link>
+
+            <Link
+              href="/inventory"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/15 backdrop-blur-md transition-all active:scale-95"
+            >
+              <PackagePlus className="w-4 h-4 text-indigo-300" />
+              <span>Thêm mặt hàng</span>
+            </Link>
+          </div>
         </div>
 
-        {/* Decorative background shapes */}
-        <div className="absolute right-0 top-0 -bottom-8 w-96 bg-gradient-to-l from-blue-500/20 to-transparent pointer-events-none rounded-full blur-2xl" />
+        {/* Ambient Decorative Blurs */}
+        <div className="absolute -right-12 -top-12 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute right-1/3 -bottom-12 w-48 h-48 bg-blue-500/15 rounded-full blur-2xl pointer-events-none" />
       </div>
 
       {/* 4 Core Stat KPI Cards */}
@@ -50,15 +76,15 @@ export default async function DashboardPage() {
           value={stats.totalProducts}
           subtitle="Sản phẩm đang lưu kho"
           icon={Boxes}
-          colorScheme="blue"
+          colorScheme="indigo"
           badgeText="Quản lý toàn bộ danh mục"
         />
 
-        {/* 2. Số lượng đơn chờ xử lý */}
+        {/* 2. Đơn chờ xử lý */}
         <StatCard
           title="Đơn chờ xử lý"
           value={stats.pendingOrdersCount}
-          subtitle="Cần xác nhận & đóng gói"
+          subtitle="Cần đóng gói & giao"
           icon={Clock}
           colorScheme="amber"
           badgeText="Trạng thái PENDING"
@@ -71,7 +97,7 @@ export default async function DashboardPage() {
           subtitle="Cần nhập bổ sung sớm"
           icon={AlertTriangle}
           colorScheme="rose"
-          badgeText="Tồn kho dưới 5 sản phẩm"
+          badgeText="Tồn kho dưới 5 cái"
         />
 
         {/* 4. Tổng doanh thu từ đơn DELIVERED */}
@@ -85,28 +111,28 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* 2-Column Section: Low Stock Warning + Order Breakdown */}
+      {/* 2-Column Section: Low Stock Warnings + Order Status Pipeline */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Cảnh báo hàng sắp hết kho (2 cols) */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-2 bento-card p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 shadow-2xs">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 text-base">
+                <h3 className="font-extrabold text-slate-900 text-base tracking-tight">
                   Cảnh báo mặt hàng sắp hết kho
                 </h3>
-                <p className="text-xs text-slate-500">
-                  Các sản phẩm có số lượng tồn kho dưới 5 cái
+                <p className="text-xs text-slate-500 font-medium">
+                  Các sản phẩm có số lượng tồn kho dưới 5 sản phẩm
                 </p>
               </div>
             </div>
 
             <Link
               href="/inventory"
-              className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 hover:underline"
+              className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 hover:underline"
             >
               <span>Xem kho hàng</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -114,9 +140,9 @@ export default async function DashboardPage() {
           </div>
 
           {stats.lowStockProducts.length === 0 ? (
-            <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400">
-              <CheckCircle2 className="w-8 h-8 mx-auto text-emerald-500 mb-1" />
-              <p className="text-xs font-semibold text-slate-700">
+            <div className="p-8 text-center bg-slate-50/80 rounded-2xl border border-dashed border-slate-200 text-slate-400">
+              <CheckCircle2 className="w-8 h-8 mx-auto text-emerald-500 mb-1.5" />
+              <p className="text-xs font-bold text-slate-700">
                 Kho hàng đang dồi dào!
               </p>
               <p className="text-[11px] text-slate-400 mt-0.5">
@@ -124,36 +150,42 @@ export default async function DashboardPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-2xl border border-slate-100">
               <table className="w-full text-left text-xs sm:text-sm">
-                <thead className="bg-slate-50 text-slate-500 font-semibold text-[11px] uppercase tracking-wider border-b border-slate-100">
+                <thead className="bg-slate-50/90 text-slate-500 font-bold text-[11px] uppercase tracking-wider border-b border-slate-100">
                   <tr>
-                    <th className="py-2.5 px-3">Sản phẩm</th>
-                    <th className="py-2.5 px-3">Mã SKU</th>
-                    <th className="py-2.5 px-3">Giá bán</th>
-                    <th className="py-2.5 px-3 text-right">Tồn kho</th>
+                    <th className="py-3 px-4">Sản phẩm</th>
+                    <th className="py-3 px-4">Mã SKU</th>
+                    <th className="py-3 px-4">Giá bán</th>
+                    <th className="py-3 px-4 text-right">Tồn kho</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium">
                   {stats.lowStockProducts.map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-50/70">
-                      <td className="py-3 px-3">
+                    <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="py-3 px-4">
                         <span className="font-bold text-slate-900 block">
                           {p.name}
                         </span>
                       </td>
-                      <td className="py-3 px-3 font-mono text-slate-500 text-xs">
-                        {p.sku || "--"}
+                      <td className="py-3 px-4 font-mono text-slate-500 text-xs">
+                        {p.sku ? (
+                          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">
+                            {p.sku}
+                          </span>
+                        ) : (
+                          "--"
+                        )}
                       </td>
-                      <td className="py-3 px-3 font-semibold text-slate-800">
+                      <td className="py-3 px-4 font-bold text-slate-900 tabular-nums">
                         {formatCurrency(p.price)}
                       </td>
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-3 px-4 text-right">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-extrabold ${
                             p.stock === 0
-                              ? "bg-rose-100 text-rose-700"
-                              : "bg-amber-100 text-amber-800"
+                              ? "bg-rose-100 text-rose-700 border border-rose-200"
+                              : "bg-amber-100 text-amber-800 border border-amber-200"
                           }`}
                         >
                           {p.stock === 0 ? "Hết hàng" : `Còn ${p.stock} cái`}
@@ -168,73 +200,75 @@ export default async function DashboardPage() {
         </div>
 
         {/* Trạng thái đơn hàng phân bổ (1 col) */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
-              <ShoppingBag className="w-5 h-5" />
+        <div className="bento-card p-6 space-y-4 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-2xs">
+                <ShoppingBag className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base tracking-tight">
+                  Phân bổ đơn hàng
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Tiến độ các giai đoạn
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-slate-900 text-base">
-                Phân bổ đơn hàng
-              </h3>
-              <p className="text-xs text-slate-500">
-                Thống kê theo 4 trạng thái
-              </p>
-            </div>
-          </div>
 
-          <div className="space-y-3 pt-2">
-            {[
-              {
-                label: "Đang xử lý (PENDING)",
-                count: stats.statusCounts.PENDING,
-                color: "bg-amber-500",
-                textColor: "text-amber-700",
-                bgColor: "bg-amber-50",
-              },
-              {
-                label: "Đang giao (SHIPPING)",
-                count: stats.statusCounts.SHIPPING,
-                color: "bg-blue-500",
-                textColor: "text-blue-700",
-                bgColor: "bg-blue-50",
-              },
-              {
-                label: "Đã giao (DELIVERED)",
-                count: stats.statusCounts.DELIVERED,
-                color: "bg-emerald-500",
-                textColor: "text-emerald-700",
-                bgColor: "bg-emerald-50",
-              },
-              {
-                label: "Đã hủy (CANCELLED)",
-                count: stats.statusCounts.CANCELLED,
-                color: "bg-rose-500",
-                textColor: "text-rose-700",
-                bgColor: "bg-rose-50",
-              },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className={`p-3 rounded-xl border border-slate-100 flex items-center justify-between ${item.bgColor}`}
-              >
-                <div className="flex items-center gap-2">
-                  <div className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
-                  <span className={`text-xs font-semibold ${item.textColor}`}>
-                    {item.label}
+            <div className="space-y-2.5">
+              {[
+                {
+                  label: "Đang xử lý (PENDING)",
+                  count: stats.statusCounts.PENDING,
+                  color: "bg-amber-500",
+                  textColor: "text-amber-800",
+                  bgColor: "bg-amber-50/70 border-amber-200/70",
+                },
+                {
+                  label: "Đang giao (SHIPPING)",
+                  count: stats.statusCounts.SHIPPING,
+                  color: "bg-blue-500",
+                  textColor: "text-blue-800",
+                  bgColor: "bg-blue-50/70 border-blue-200/70",
+                },
+                {
+                  label: "Đã giao (DELIVERED)",
+                  count: stats.statusCounts.DELIVERED,
+                  color: "bg-emerald-500",
+                  textColor: "text-emerald-800",
+                  bgColor: "bg-emerald-50/70 border-emerald-200/70",
+                },
+                {
+                  label: "Đã hủy (CANCELLED)",
+                  count: stats.statusCounts.CANCELLED,
+                  color: "bg-rose-500",
+                  textColor: "text-rose-800",
+                  bgColor: "bg-rose-50/70 border-rose-200/70",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className={`p-3 rounded-2xl border flex items-center justify-between ${item.bgColor} transition-all`}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
+                    <span className={`text-xs font-bold ${item.textColor}`}>
+                      {item.label}
+                    </span>
+                  </div>
+                  <span className="font-extrabold text-sm text-slate-900 tabular-nums">
+                    {item.count}
                   </span>
                 </div>
-                <span className="font-extrabold text-sm text-slate-900">
-                  {item.count}
-                </span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-3 border-t border-slate-100">
             <Link
               href="/orders"
-              className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-all"
+              className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-2xs transition-all"
             >
               <span>Xem chi tiết đơn hàng</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -243,18 +277,18 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Bảng danh sách các đơn hàng mới tạo gần nhất */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+      {/* Bảng danh sách đơn hàng mới tạo gần nhất */}
+      <div className="bento-card p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-2xs">
               <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-base">
+              <h3 className="font-extrabold text-slate-900 text-base tracking-tight">
                 Đơn hàng mới tạo gần nhất
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 font-medium">
                 Các đơn đặt hàng mới nhất được ghi nhận vào hệ thống
               </p>
             </div>
@@ -262,7 +296,7 @@ export default async function DashboardPage() {
 
           <Link
             href="/orders"
-            className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 hover:underline"
+            className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 hover:underline"
           >
             <span>Xem tất cả</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -270,17 +304,17 @@ export default async function DashboardPage() {
         </div>
 
         {stats.recentOrders.length === 0 ? (
-          <div className="p-12 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400">
+          <div className="p-12 text-center bg-slate-50/80 rounded-2xl border border-dashed border-slate-200 text-slate-400">
             <ShoppingBag className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-            <p className="font-semibold text-slate-700">Chưa có đơn hàng nào</p>
+            <p className="font-bold text-slate-700">Chưa có đơn hàng nào</p>
             <p className="text-xs text-slate-400 mt-1">
-              Nhấn vào nút &quot;Tạo đơn mới&quot; trên thanh Header để tạo đơn đầu tiên.
+              Nhấn vào nút &quot;Tạo đơn mới&quot; để tạo đơn đầu tiên.
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-2xl border border-slate-100">
             <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-slate-50 text-slate-500 font-semibold text-[11px] uppercase tracking-wider border-b border-slate-200/80">
+              <thead className="bg-slate-50/90 text-slate-500 font-bold text-[11px] uppercase tracking-wider border-b border-slate-100">
                 <tr>
                   <th className="py-3 px-4">Mã đơn</th>
                   <th className="py-3 px-4">Khách hàng</th>
@@ -292,8 +326,8 @@ export default async function DashboardPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
                 {stats.recentOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-slate-50/70">
-                    <td className="py-3.5 px-4 font-mono font-bold text-blue-600">
+                  <tr key={order.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3.5 px-4 font-mono font-bold text-indigo-600">
                       #{order.id.slice(-6).toUpperCase()}
                     </td>
                     <td className="py-3.5 px-4">
@@ -305,16 +339,20 @@ export default async function DashboardPage() {
                       </span>
                     </td>
                     <td className="py-3.5 px-4">
-                      {order.items.length} mặt hàng (
-                      {order.items.reduce((s, i) => s + i.quantity, 0)} cái)
+                      <span className="font-semibold text-slate-800">
+                        {order.items.length} món
+                      </span>{" "}
+                      <span className="text-xs text-slate-400">
+                        ({order.items.reduce((s, i) => s + i.quantity, 0)} cái)
+                      </span>
                     </td>
-                    <td className="py-3.5 px-4 font-bold text-slate-900">
+                    <td className="py-3.5 px-4 font-extrabold text-slate-900 tabular-nums">
                       {formatCurrency(order.totalAmount)}
                     </td>
                     <td className="py-3.5 px-4">
                       <OrderStatusBadge status={order.status} />
                     </td>
-                    <td className="py-3.5 px-4 text-xs text-slate-500 text-right">
+                    <td className="py-3.5 px-4 text-xs text-slate-500 text-right tabular-nums">
                       {formatDate(order.createdAt)}
                     </td>
                   </tr>

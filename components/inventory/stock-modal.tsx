@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
 import { updateStockAndPrice } from "@/app/actions/product-actions";
 import { Product } from "@prisma/client";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, Sliders, DollarSign, Boxes } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
 interface StockModalProps {
@@ -84,29 +84,29 @@ export function StockModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2">
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5 animate-in fade-in">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            <span>{error}</span>
+            <span className="font-semibold">{error}</span>
           </div>
         )}
 
-        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs space-y-1">
-          <div className="flex justify-between text-slate-500">
+        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs space-y-1.5 shadow-2xs">
+          <div className="flex justify-between text-slate-500 font-medium">
             <span>Mã SKU:</span>
-            <span className="font-mono font-medium text-slate-800">
+            <span className="font-mono font-bold text-slate-800">
               {product.sku || "(Không có)"}
             </span>
           </div>
-          <div className="flex justify-between text-slate-500">
+          <div className="flex justify-between text-slate-500 font-medium">
             <span>Giá hiện tại:</span>
-            <span className="font-medium text-slate-800">
+            <span className="font-bold text-slate-800 tabular-nums">
               {formatCurrency(product.price)}
             </span>
           </div>
-          <div className="flex justify-between text-slate-500">
+          <div className="flex justify-between text-slate-500 font-medium">
             <span>Tồn kho hiện tại:</span>
             <span
-              className={`font-bold ${
+              className={`font-extrabold ${
                 product.stock < 5 ? "text-amber-600" : "text-emerald-600"
               }`}
             >
@@ -116,7 +116,8 @@ export function StockModal({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+            <Boxes className="w-3.5 h-3.5 text-indigo-600" />
             Số lượng tồn kho mới
           </label>
           <input
@@ -125,12 +126,13 @@ export function StockModal({
             required
             value={stock}
             onChange={(e) => setStock(e.target.value)}
-            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-semibold"
+            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-extrabold shadow-2xs"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+            <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
             Giá bán mới (VNĐ)
           </label>
           <input
@@ -140,7 +142,7 @@ export function StockModal({
             required
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-semibold"
+            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-extrabold shadow-2xs"
           />
         </div>
 
@@ -148,14 +150,14 @@ export function StockModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold"
+            className="px-5 py-2.5 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition-all"
           >
             Đóng
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold shadow-lg shadow-indigo-500/25 disabled:opacity-50 transition-all active:scale-95"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             <span>Cập nhật</span>
