@@ -7,7 +7,7 @@ interface StatCardProps {
   value: string | number;
   subtitle?: string;
   icon: LucideIcon;
-  colorScheme: "blue" | "amber" | "emerald" | "rose" | "purple" | "indigo";
+  colorScheme: "blue" | "amber" | "emerald" | "rose" | "purple" | "indigo" | "claude";
   badgeText?: string;
   onClick?: () => void;
 }
@@ -22,73 +22,56 @@ export function StatCard({
   onClick,
 }: StatCardProps) {
   const schemeStyles = {
-    blue: {
-      iconBg: "bg-blue-50 text-blue-600 border-blue-100",
-      borderHover: "hover:border-blue-300 hover:shadow-glow-brand",
-      glowBg: "bg-blue-500/5",
-      badgeColor: "text-blue-700 bg-blue-50 border-blue-100",
-    },
-    indigo: {
-      iconBg: "bg-indigo-50 text-indigo-600 border-indigo-100",
-      borderHover: "hover:border-indigo-300 hover:shadow-glow-brand",
-      glowBg: "bg-indigo-500/5",
-      badgeColor: "text-indigo-700 bg-indigo-50 border-indigo-100",
+    claude: {
+      iconBg: "bg-[#FAF2EE] text-[#CC785C] border-[#F5E4DB]",
+      badgeColor: "text-[#9B5038] bg-[#FAF2EE] border-[#F5E4DB]",
     },
     amber: {
-      iconBg: "bg-amber-50 text-amber-600 border-amber-100",
-      borderHover: "hover:border-amber-300 hover:shadow-glow-amber",
-      glowBg: "bg-amber-500/5",
-      badgeColor: "text-amber-700 bg-amber-50 border-amber-100",
+      iconBg: "bg-[#FEF8EC] text-[#B45309] border-[#FDE68A]",
+      badgeColor: "text-[#92400E] bg-[#FEF8EC] border-[#FDE68A]",
     },
     emerald: {
-      iconBg: "bg-emerald-50 text-emerald-600 border-emerald-100",
-      borderHover: "hover:border-emerald-300 hover:shadow-glow-emerald",
-      glowBg: "bg-emerald-500/5",
-      badgeColor: "text-emerald-700 bg-emerald-50 border-emerald-100",
+      iconBg: "bg-[#F0FDF4] text-[#15803D] border-[#BBF7D0]",
+      badgeColor: "text-[#166534] bg-[#F0FDF4] border-[#BBF7D0]",
     },
     rose: {
-      iconBg: "bg-rose-50 text-rose-600 border-rose-100",
-      borderHover: "hover:border-rose-300 hover:shadow-glow-rose",
-      glowBg: "bg-rose-500/5",
-      badgeColor: "text-rose-700 bg-rose-50 border-rose-100",
+      iconBg: "bg-[#FEF2F2] text-[#B91C1C] border-[#FECACA]",
+      badgeColor: "text-[#991B1B] bg-[#FEF2F2] border-[#FECACA]",
+    },
+    blue: {
+      iconBg: "bg-[#F0F7FF] text-[#2563EB] border-[#BFDBFE]",
+      badgeColor: "text-[#1E40AF] bg-[#F0F7FF] border-[#BFDBFE]",
+    },
+    indigo: {
+      iconBg: "bg-[#FAF2EE] text-[#CC785C] border-[#F5E4DB]",
+      badgeColor: "text-[#9B5038] bg-[#FAF2EE] border-[#F5E4DB]",
     },
     purple: {
-      iconBg: "bg-purple-50 text-purple-600 border-purple-100",
-      borderHover: "hover:border-purple-300 hover:shadow-glow-brand",
-      glowBg: "bg-purple-500/5",
-      badgeColor: "text-purple-700 bg-purple-50 border-purple-100",
+      iconBg: "bg-[#FAF5FF] text-[#7E22CE] border-[#E9D5FF]",
+      badgeColor: "text-[#6B21A8] bg-[#FAF5FF] border-[#E9D5FF]",
     },
   };
 
-  const style = schemeStyles[colorScheme] || schemeStyles.blue;
+  const style = schemeStyles[colorScheme] || schemeStyles.claude;
 
   return (
     <div
       onClick={onClick}
       className={cn(
-        "relative p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs transition-all duration-300 overflow-hidden group",
-        style.borderHover,
+        "p-5 rounded-2xl bg-white border border-[#E8E4DC] shadow-claude-xs hover:border-[#D6D1C7] transition-all",
         onClick && "cursor-pointer active:scale-98"
       )}
     >
-      {/* Subtle background ambient glow */}
-      <div
-        className={cn(
-          "absolute -right-8 -top-8 w-28 h-28 rounded-full blur-2xl transition-opacity duration-300 opacity-60 group-hover:opacity-100 pointer-events-none",
-          style.glowBg
-        )}
-      />
-
-      <div className="relative z-10 flex items-start justify-between gap-3">
-        <div className="space-y-1.5 flex-1 min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 truncate">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1 flex-1 min-w-0">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#78716C] truncate">
             {title}
           </p>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums truncate">
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#191716] tracking-tight tabular-nums truncate">
             {value}
           </h3>
           {subtitle && (
-            <p className="text-xs text-slate-400 font-medium truncate">
+            <p className="text-xs text-[#78716C] font-normal truncate">
               {subtitle}
             </p>
           )}
@@ -96,7 +79,7 @@ export function StatCard({
 
         <div
           className={cn(
-            "p-3.5 rounded-2xl border flex items-center justify-center shrink-0 shadow-2xs transition-transform duration-300 group-hover:scale-105",
+            "p-3 rounded-xl border flex items-center justify-center shrink-0 shadow-2xs",
             style.iconBg
           )}
         >
@@ -105,7 +88,7 @@ export function StatCard({
       </div>
 
       {badgeText && (
-        <div className="relative z-10 mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between">
+        <div className="mt-3.5 pt-3 border-t border-[#F5F2EB] flex items-center justify-between">
           <span
             className={cn(
               "inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold border",

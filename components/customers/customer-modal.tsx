@@ -95,15 +95,15 @@ export function CustomerModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5 animate-in fade-in">
+          <div className="p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#B91C1C] text-xs flex items-start gap-2 animate-in fade-in">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span className="font-semibold">{error}</span>
           </div>
         )}
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5 text-indigo-600" />
+          <label className="block text-xs font-semibold text-[#44403C] mb-1 flex items-center gap-1.5">
+            <User className="w-3.5 h-3.5 text-[#CC785C]" />
             Họ và tên khách hàng <span className="text-rose-500">*</span>
           </label>
           <input
@@ -112,13 +112,13 @@ export function CustomerModal({
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="Ví dụ: Nguyễn Văn An"
-            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-semibold shadow-2xs"
+            className="w-full px-3.5 py-2 rounded-xl border border-[#E8E4DC] focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20 focus:border-[#CC785C] text-sm font-semibold"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-            <Phone className="w-3.5 h-3.5 text-indigo-600" />
+          <label className="block text-xs font-semibold text-[#44403C] mb-1 flex items-center gap-1.5">
+            <Phone className="w-3.5 h-3.5 text-[#CC785C]" />
             Số điện thoại <span className="text-rose-500">*</span>
           </label>
           <input
@@ -129,13 +129,13 @@ export function CustomerModal({
               setFormData({ ...formData, phone: e.target.value })
             }
             placeholder="Ví dụ: 0901234567"
-            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-mono font-bold shadow-2xs"
+            className="w-full px-3.5 py-2 rounded-xl border border-[#E8E4DC] focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20 focus:border-[#CC785C] text-sm font-mono font-semibold"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-indigo-600" />
+          <label className="block text-xs font-semibold text-[#44403C] mb-1 flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-[#CC785C]" />
             Địa chỉ nhận hàng
           </label>
           <textarea
@@ -145,22 +145,22 @@ export function CustomerModal({
               setFormData({ ...formData, address: e.target.value })
             }
             placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
-            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm font-medium shadow-2xs"
+            className="w-full px-3.5 py-2 rounded-xl border border-[#E8E4DC] focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20 focus:border-[#CC785C] text-sm font-medium"
           />
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 mt-6">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#F5F2EB] mt-5">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition-all"
+            className="px-4 py-2 rounded-xl border border-[#E8E4DC] text-[#44403C] hover:bg-[#F5F2EB] text-xs font-semibold transition-all"
           >
             Hủy bỏ
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-50 active:scale-95"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-[#CC785C] hover:bg-[#BA664A] text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50 active:scale-95"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             <span>{isEditing ? "Lưu thay đổi" : "Tạo khách hàng"}</span>

@@ -83,51 +83,51 @@ export function ProductOrdersModal({
       description={`Lịch sử đặt hàng chi tiết của: ${productName}`}
       maxWidth="3xl"
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
         {loading ? (
-          <div className="py-16 flex flex-col items-center justify-center gap-3 text-slate-500">
-            <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
-            <p className="text-xs font-bold">Đang tải lịch sử đặt hàng...</p>
+          <div className="py-14 flex flex-col items-center justify-center gap-2 text-[#78716C]">
+            <Loader2 className="w-6 h-6 animate-spin text-[#CC785C]" />
+            <p className="text-xs font-semibold">Đang tải lịch sử đặt hàng...</p>
           </div>
         ) : (
           <>
             {/* Thống kê nhanh về mặt hàng */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="p-4 rounded-3xl bg-emerald-50/90 border border-emerald-200/80 shadow-2xs">
-                <div className="flex items-center gap-2 text-emerald-700 text-xs font-bold">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <div className="p-3.5 rounded-2xl bg-[#F0FDF4] border border-[#BBF7D0]">
+                <div className="flex items-center gap-1.5 text-[#166534] text-xs font-semibold">
+                  <CheckCircle2 className="w-4 h-4 text-[#15803D]" />
                   <span>Đã bán thành công:</span>
                 </div>
-                <p className="text-2xl font-extrabold text-emerald-700 mt-1 tabular-nums">
+                <p className="font-serif text-xl font-bold text-[#166534] mt-1 tabular-nums">
                   {totalDeliveredQty} cái
                 </p>
-                <p className="text-[11px] text-emerald-600/90 mt-0.5 font-medium">
+                <p className="text-[11px] text-[#15803D] mt-0.5">
                   Doanh thu: {formatCurrency(totalDeliveredRevenue)}
                 </p>
               </div>
 
-              <div className="p-4 rounded-3xl bg-amber-50/90 border border-amber-200/80 shadow-2xs">
-                <div className="flex items-center gap-2 text-amber-700 text-xs font-bold">
-                  <Clock className="w-4 h-4 text-amber-600" />
-                  <span>Đang xử lý / Giao hàng:</span>
+              <div className="p-3.5 rounded-2xl bg-[#FEF8EC] border border-[#FDE68A]">
+                <div className="flex items-center gap-1.5 text-[#92400E] text-xs font-semibold">
+                  <Clock className="w-4 h-4 text-[#B45309]" />
+                  <span>Đang xử lý / Giao:</span>
                 </div>
-                <p className="text-2xl font-extrabold text-amber-700 mt-1 tabular-nums">
+                <p className="font-serif text-xl font-bold text-[#92400E] mt-1 tabular-nums">
                   {totalPendingOrShippingQty} cái
                 </p>
-                <p className="text-[11px] text-amber-600/90 mt-0.5 font-medium">
+                <p className="text-[11px] text-[#B45309] mt-0.5">
                   Chờ hoàn tất giao hàng
                 </p>
               </div>
 
-              <div className="p-4 rounded-3xl bg-indigo-50/90 border border-indigo-200/80 shadow-2xs">
-                <div className="flex items-center gap-2 text-indigo-700 text-xs font-bold">
-                  <Package className="w-4 h-4 text-indigo-600" />
+              <div className="p-3.5 rounded-2xl bg-[#FAF2EE] border border-[#F5E4DB]">
+                <div className="flex items-center gap-1.5 text-[#9B5038] text-xs font-semibold">
+                  <Package className="w-4 h-4 text-[#CC785C]" />
                   <span>Tồn kho hiện tại:</span>
                 </div>
-                <p className="text-2xl font-extrabold text-indigo-700 mt-1 tabular-nums">
+                <p className="font-serif text-xl font-bold text-[#9B5038] mt-1 tabular-nums">
                   {data?.stock ?? 0} cái
                 </p>
-                <p className="text-[11px] text-indigo-600/90 mt-0.5 font-medium">
+                <p className="text-[11px] text-[#CC785C] mt-0.5">
                   Giá bán: {data ? formatCurrency(data.price) : "--"}
                 </p>
               </div>
@@ -135,69 +135,69 @@ export function ProductOrdersModal({
 
             {/* Bảng danh sách khách hàng đã đặt */}
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-indigo-600" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#44403C] mb-2 flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-[#CC785C]" />
                 Danh sách khách hàng ({orderItems.length} lượt đặt)
               </h4>
 
               {orderItems.length === 0 ? (
-                <div className="p-12 text-center bg-slate-50/80 rounded-3xl border border-dashed border-slate-200 text-slate-400">
-                  <ShoppingBag className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-                  <p className="text-xs font-bold text-slate-700">
+                <div className="p-8 text-center bg-[#FAF8F5] rounded-xl border border-dashed border-[#E8E4DC] text-[#78716C]">
+                  <ShoppingBag className="w-8 h-8 mx-auto text-[#A8A296] mb-1" />
+                  <p className="text-xs font-semibold text-[#191716]">
                     Chưa có khách hàng nào đặt mặt hàng này
                   </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5 font-medium">
+                  <p className="text-[11px] text-[#78716C] mt-0.5">
                     Khi khách đặt đơn có chứa sản phẩm này, danh sách sẽ hiển thị tại đây.
                   </p>
                 </div>
               ) : (
-                <div className="rounded-2xl border border-slate-200 overflow-hidden shadow-2xs">
-                  <div className="max-h-[340px] overflow-y-auto">
+                <div className="rounded-xl border border-[#E8E4DC] overflow-hidden">
+                  <div className="max-h-[300px] overflow-y-auto">
                     <table className="w-full text-left text-xs sm:text-sm">
-                      <thead className="bg-slate-50/90 text-slate-500 font-bold text-[11px] uppercase tracking-wider sticky top-0 border-b border-slate-200 z-10">
+                      <thead className="bg-[#FAF8F5] text-[#78716C] font-semibold text-[11px] uppercase tracking-wider sticky top-0 border-b border-[#E8E4DC] z-10">
                         <tr>
-                          <th className="py-3 px-4">Khách hàng</th>
-                          <th className="py-3 px-4">Mã đơn</th>
-                          <th className="py-3 px-3 text-center">SL mua</th>
-                          <th className="py-3 px-4">Thành tiền</th>
-                          <th className="py-3 px-4">Trạng thái đơn</th>
-                          <th className="py-3 px-4 text-right">Ngày đặt</th>
+                          <th className="py-2.5 px-3">Khách hàng</th>
+                          <th className="py-2.5 px-3">Mã đơn</th>
+                          <th className="py-2.5 px-2 text-center">SL</th>
+                          <th className="py-2.5 px-3">Thành tiền</th>
+                          <th className="py-2.5 px-3">Trạng thái</th>
+                          <th className="py-2.5 px-3 text-right">Ngày đặt</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                      <tbody className="divide-y divide-[#F5F2EB] font-medium text-[#191716]">
                         {orderItems.map((item) => (
                           <tr
                             key={item.id}
-                            className="hover:bg-slate-50/70 transition-colors"
+                            className="hover:bg-[#FAF8F5] transition-colors"
                           >
                             {/* Khách hàng */}
-                            <td className="py-3.5 px-4">
-                              <span className="font-bold text-slate-900 block">
+                            <td className="py-2.5 px-3">
+                              <span className="font-semibold text-[#191716] block">
                                 {item.order.customer.name}
                               </span>
-                              <span className="text-[11px] text-slate-500 flex items-center gap-1 font-mono mt-0.5">
-                                <Phone className="w-3 h-3 text-slate-400" />
+                              <span className="text-[11px] text-[#78716C] flex items-center gap-1 font-mono">
+                                <Phone className="w-3 h-3 text-[#A8A296]" />
                                 {item.order.customer.phone}
                               </span>
                             </td>
 
                             {/* Mã đơn */}
-                            <td className="py-3.5 px-4 font-mono font-bold text-indigo-600 text-xs">
+                            <td className="py-2.5 px-3 font-mono font-bold text-[#CC785C] text-xs">
                               #{item.order.id.slice(-6).toUpperCase()}
                             </td>
 
                             {/* Số lượng */}
-                            <td className="py-3.5 px-3 text-center font-extrabold text-slate-900">
+                            <td className="py-2.5 px-2 text-center font-bold text-[#191716]">
                               x{item.quantity}
                             </td>
 
                             {/* Thành tiền */}
-                            <td className="py-3.5 px-4 font-bold text-slate-900 tabular-nums">
+                            <td className="py-2.5 px-3 font-bold text-[#191716] tabular-nums">
                               {formatCurrency(item.price * item.quantity)}
                             </td>
 
                             {/* Trạng thái đơn */}
-                            <td className="py-3.5 px-4">
+                            <td className="py-2.5 px-3">
                               <OrderStatusBadge
                                 status={item.order.status}
                                 showIcon={false}
@@ -205,7 +205,7 @@ export function ProductOrdersModal({
                             </td>
 
                             {/* Ngày đặt */}
-                            <td className="py-3.5 px-4 text-right text-xs text-slate-500 tabular-nums">
+                            <td className="py-2.5 px-3 text-right text-xs text-[#78716C] tabular-nums">
                               {formatDate(item.order.createdAt)}
                             </td>
                           </tr>
@@ -218,11 +218,11 @@ export function ProductOrdersModal({
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end pt-3 border-t border-slate-100">
+            <div className="flex justify-end pt-2 border-t border-[#F5F2EB]">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-md"
+                className="px-4 py-2 rounded-xl bg-[#191716] hover:bg-[#292524] text-white text-xs font-semibold shadow-xs"
               >
                 Đóng
               </button>

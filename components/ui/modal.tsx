@@ -51,30 +51,30 @@ export function Modal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-      {/* Backdrop with High-blur Glassmorphism */}
+      {/* Lightweight Backdrop - Zero GPU Paint Lag */}
       <div
-        className="fixed inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-black/40 transition-opacity animate-in fade-in duration-150"
         onClick={onClose}
       />
 
       {/* Modal Dialog */}
       <div
         className={cn(
-          "relative w-full bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]",
+          "relative w-full bg-white rounded-2xl shadow-xl border border-[#E8E4DC] overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]",
           maxWidthClasses[maxWidth]
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50/80 to-slate-50/30">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#F5F2EB] bg-[#FAF8F5]">
           <div>
-            <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{title}</h3>
+            <h3 className="font-serif text-lg font-bold text-[#191716] tracking-tight">{title}</h3>
             {description && (
-              <p className="text-xs text-slate-500 font-medium mt-0.5">{description}</p>
+              <p className="text-xs text-[#78716C] font-normal mt-0.5">{description}</p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-2xl transition-colors"
+            className="p-1.5 text-[#A8A296] hover:text-[#191716] hover:bg-[#F5F2EB] rounded-xl transition-colors"
           >
             <X className="w-5 h-5" />
           </button>

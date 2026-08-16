@@ -1,6 +1,6 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 import { OrderStatus } from "@prisma/client";
-import { ORDER_STATUS_CONFIG, cn } from "@/lib/utils";
 import { Clock, Truck, CheckCircle2, XCircle } from "lucide-react";
 
 interface OrderStatusBadgeProps {
@@ -14,37 +14,47 @@ export function OrderStatusBadge({
   className,
   showIcon = true,
 }: OrderStatusBadgeProps) {
-  const config = ORDER_STATUS_CONFIG[status] || {
-    label: status,
-    badgeClass: "bg-slate-100 text-slate-700 border-slate-200",
-    dotClass: "bg-slate-400",
+  const config = {
+    PENDING: {
+      label: "Chờ xử lý",
+      bg: "bg-[#FEF8EC] text-[#92400E] border-[#FDE68A]",
+      icon: Clock,
+      dotColor: "bg-[#D97706]",
+    },
+    SHIPPING: {
+      label: "Đang giao",
+      bg: "bg-[#F0F7FF] text-[#1E40AF] border-[#BFDBFE]",
+      icon: Truck,
+      dotColor: "bg-[#2563EB]",
+    },
+    DELIVERED: {
+      label: "Đã giao (Trừ kho)",
+      bg: "bg-[#F0FDF4] text-[#166534] border-[#BBF7D0]",
+      icon: CheckCircle2,
+      dotColor: "bg-[#15803D]",
+    },
+    CANCELLED: {
+      label: "Đã hủy",
+      bg: "bg-[#FEF2F2] text-[#991B1B] border-[#FECACA]",
+      icon: XCircle,
+      dotColor: "bg-[#DC2626]",
+    },
   };
 
-  const renderIcon = () => {
-    switch (status) {
-      case "PENDING":
-        return <Clock className="w-3.5 h-3.5 text-amber-600 animate-pulse" />;
-      case "SHIPPING":
-        return <Truck className="w-3.5 h-3.5 text-blue-600" />;
-      case "DELIVERED":
-        return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />;
-      case "CANCELLED":
-        return <XCircle className="w-3.5 h-3.5 text-rose-600" />;
-      default:
-        return null;
-    }
-  };
+  const current = config[status] || config.PENDING;
+  const Icon = current.icon;
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border shadow-sm transition-all",
-        config.badgeClass,
+        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border transition-colors shadow-2xs",
+        current.bg,
         className
       )}
     >
-      {showIcon && renderIcon()}
-      <span>{config.label}</span>
+      <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", current.dotColor)} />
+      {showIcon && <Icon className="w-3 h-3 shrink-0" />}
+      <span>{current.label}</span>
     </span>
   );
 }

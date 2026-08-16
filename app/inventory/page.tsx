@@ -13,37 +13,37 @@ export default async function InventoryPage() {
   const outOfStockCount = products.filter((p) => p.stock === 0).length;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6">
       {/* Header Title Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
-            <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-2xs">
-              <Boxes className="w-6 h-6" />
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#191716] tracking-tight flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-[#FAF2EE] text-[#CC785C] border border-[#F5E4DB]">
+              <Boxes className="w-5 h-5" />
             </div>
             <span>Quản lý Kho Hàng</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">
+          <p className="text-xs sm:text-sm text-[#78716C] mt-1">
             Theo dõi danh mục sản phẩm, mã SKU, giá bán và số lượng tồn kho khả dụng
           </p>
         </div>
 
         {/* Quick Inventory Metrics Summary */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <div className="px-4 py-2 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex items-center gap-2 text-xs font-bold">
-            <PackageCheck className="w-4 h-4 text-indigo-600" />
-            <span className="text-slate-500 font-medium">Tổng tồn:</span>
-            <span className="text-slate-900 tabular-nums">{totalStock} cái</span>
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+          <div className="px-3.5 py-1.5 rounded-xl bg-white border border-[#E8E4DC] shadow-claude-xs flex items-center gap-2 text-xs font-semibold">
+            <PackageCheck className="w-4 h-4 text-[#CC785C]" />
+            <span className="text-[#78716C]">Tổng tồn:</span>
+            <span className="text-[#191716] font-bold tabular-nums">{totalStock} cái</span>
           </div>
 
-          <div className="px-4 py-2 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex items-center gap-2 text-xs font-bold">
-            <AlertTriangle className="w-4 h-4 text-amber-500" />
-            <span className="text-slate-500 font-medium">Sắp hết (&lt; 5):</span>
-            <span className="text-amber-600 tabular-nums">{lowStockCount} loại</span>
+          <div className="px-3.5 py-1.5 rounded-xl bg-white border border-[#E8E4DC] shadow-claude-xs flex items-center gap-2 text-xs font-semibold">
+            <AlertTriangle className="w-4 h-4 text-[#B45309]" />
+            <span className="text-[#78716C]">Sắp hết (&lt; 5):</span>
+            <span className="text-[#B45309] font-bold tabular-nums">{lowStockCount} loại</span>
           </div>
 
           {outOfStockCount > 0 && (
-            <div className="px-4 py-2 rounded-2xl bg-rose-50 border border-rose-200 shadow-2xs flex items-center gap-2 text-xs font-extrabold text-rose-700">
+            <div className="px-3.5 py-1.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] shadow-claude-xs flex items-center gap-2 text-xs font-bold text-[#B91C1C]">
               <span>Hết hàng: {outOfStockCount} loại</span>
             </div>
           )}

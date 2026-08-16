@@ -72,72 +72,72 @@ export function ProductCombobox({
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full px-3.5 py-2.5 rounded-2xl border bg-white text-left text-xs sm:text-sm flex items-center justify-between gap-2 transition-all shadow-2xs",
+          "w-full px-3 py-2 rounded-xl border bg-white text-left text-xs sm:text-sm flex items-center justify-between gap-2 transition-all shadow-2xs",
           isOpen
-            ? "border-indigo-500 ring-2 ring-indigo-500/20"
-            : "border-slate-200 hover:border-slate-300",
-          disabled && "opacity-50 cursor-not-allowed bg-slate-50"
+            ? "border-[#CC785C] ring-2 ring-[#CC785C]/20"
+            : "border-[#E8E4DC] hover:border-[#D6D1C7]",
+          disabled && "opacity-50 cursor-not-allowed bg-[#FAF8F5]"
         )}
       >
-        <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          <Package className="w-4 h-4 text-indigo-500 shrink-0" />
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <Package className="w-4 h-4 text-[#CC785C] shrink-0" />
           {selectedProduct ? (
             <div className="flex items-center gap-2 min-w-0 flex-1 truncate">
-              <span className="font-bold text-slate-900 truncate">
+              <span className="font-semibold text-[#191716] truncate">
                 {selectedProduct.name}
               </span>
               {selectedProduct.sku && (
-                <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono text-[10px] font-bold shrink-0">
+                <span className="px-1.5 py-0.2 rounded bg-[#F5F2EB] text-[#44403C] font-mono text-[10px] shrink-0 font-semibold">
                   {selectedProduct.sku}
                 </span>
               )}
               <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold shrink-0 ${
+                className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold shrink-0 ${
                   selectedProduct.stock === 0
-                    ? "bg-rose-100 text-rose-700"
+                    ? "bg-[#FEF2F2] text-[#B91C1C]"
                     : selectedProduct.stock < 5
-                    ? "bg-amber-100 text-amber-800"
-                    : "bg-emerald-50 text-emerald-700"
+                    ? "bg-[#FEF8EC] text-[#92400E]"
+                    : "bg-[#F0FDF4] text-[#166534]"
                 }`}
               >
                 Kho: {selectedProduct.stock}
               </span>
-              <span className="font-extrabold text-slate-900 text-xs shrink-0 ml-auto mr-1 tabular-nums">
+              <span className="font-bold text-[#191716] text-xs shrink-0 ml-auto mr-1 tabular-nums">
                 {formatCurrency(selectedProduct.price)}
               </span>
             </div>
           ) : (
-            <span className="text-slate-400 font-medium">-- Tìm và chọn sản phẩm --</span>
+            <span className="text-[#A8A296] font-medium">-- Tìm và chọn sản phẩm --</span>
           )}
         </div>
 
         <ChevronDown
           className={cn(
-            "w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200",
-            isOpen && "rotate-180 text-indigo-600"
+            "w-4 h-4 text-[#A8A296] shrink-0 transition-transform duration-150",
+            isOpen && "rotate-180 text-[#CC785C]"
           )}
         />
       </button>
 
       {/* Popover Dropdown tìm kiếm */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-3xl border border-slate-200 shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute left-0 right-0 top-full mt-1 bg-white rounded-2xl border border-[#E8E4DC] shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
           {/* Search Box Input */}
-          <div className="p-3 border-b border-slate-100 bg-slate-50/80 relative flex items-center">
-            <Search className="w-4 h-4 text-slate-400 absolute left-6 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="p-2 border-b border-[#F5F2EB] bg-[#FAF8F5] relative flex items-center">
+            <Search className="w-4 h-4 text-[#A8A296] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               ref={inputRef}
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Gõ tên hoặc mã SKU để tìm nhanh..."
-              className="w-full pl-9 pr-8 py-2 text-xs sm:text-sm bg-white rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium"
+              className="w-full pl-8 pr-7 py-1.5 text-xs sm:text-sm bg-white rounded-xl border border-[#E8E4DC] focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20 focus:border-[#CC785C] font-medium"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-5 text-slate-400 hover:text-slate-600 p-1"
+                className="absolute right-4 text-[#A8A296] hover:text-[#57534E] p-0.5"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -145,9 +145,9 @@ export function ProductCombobox({
           </div>
 
           {/* Product Items List */}
-          <div className="max-h-60 overflow-y-auto p-2 space-y-1">
+          <div className="max-h-56 overflow-y-auto p-1.5 space-y-1">
             {filteredProducts.length === 0 ? (
-              <div className="py-8 text-center text-slate-400 text-xs font-medium">
+              <div className="py-6 text-center text-[#78716C] text-xs font-medium">
                 Không tìm thấy sản phẩm nào khớp với &quot;<b>{search}</b>&quot;
               </div>
             ) : (
@@ -165,47 +165,47 @@ export function ProductCombobox({
                       setIsOpen(false);
                     }}
                     className={cn(
-                      "w-full text-left p-3 rounded-2xl flex items-center justify-between gap-3 text-xs sm:text-sm transition-all",
+                      "w-full text-left p-2.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm transition-colors",
                       isSelected
-                        ? "bg-indigo-50/90 text-indigo-900 font-bold shadow-2xs border border-indigo-100"
-                        : "hover:bg-slate-50 text-slate-800"
+                        ? "bg-[#FAF2EE] text-[#9B5038] font-bold border border-[#F5E4DB]"
+                        : "hover:bg-[#FAF8F5] text-[#191716]"
                     )}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-slate-900 truncate">
+                        <span className="font-semibold text-[#191716] truncate">
                           {product.name}
                         </span>
                         {product.sku && (
-                          <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono text-[10px] font-bold">
+                          <span className="px-1.5 py-0.2 rounded bg-[#F5F2EB] text-[#44403C] font-mono text-[10px] font-semibold">
                             {product.sku}
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 mt-1 text-xs">
+                      <div className="flex items-center gap-2 mt-0.5 text-xs">
                         <span
-                          className={`font-extrabold ${
+                          className={`font-semibold ${
                             isOutOfStock
-                              ? "text-rose-600"
+                              ? "text-[#B91C1C]"
                               : isLowStock
-                              ? "text-amber-600"
-                              : "text-emerald-600"
+                              ? "text-[#B45309]"
+                              : "text-[#15803D]"
                           }`}
                         >
                           {isOutOfStock
                             ? "Hết hàng (0)"
                             : `Còn ${product.stock} cái`}
                         </span>
-                        <span className="text-slate-300">•</span>
-                        <span className="font-extrabold text-slate-900 tabular-nums">
+                        <span className="text-[#D6D1C7]">•</span>
+                        <span className="font-bold text-[#191716] tabular-nums">
                           {formatCurrency(product.price)}
                         </span>
                       </div>
                     </div>
 
                     {isSelected && (
-                      <div className="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-                        <Check className="w-3 h-3" />
+                      <div className="w-4 h-4 rounded-full bg-[#CC785C] text-white flex items-center justify-center shrink-0">
+                        <Check className="w-2.5 h-2.5" />
                       </div>
                     )}
                   </button>

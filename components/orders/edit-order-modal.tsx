@@ -183,24 +183,24 @@ export function EditOrderModal({
       description={`Cập nhật danh sách sản phẩm hoặc khách hàng cho đơn #${order.id.slice(-6).toUpperCase()}`}
       maxWidth="3xl"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2.5 animate-in fade-in">
+          <div className="p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#B91C1C] text-xs flex items-start gap-2 animate-in fade-in">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span className="font-semibold">{error}</span>
           </div>
         )}
 
         {/* Khách hàng selector */}
-        <div className="p-5 rounded-3xl bg-slate-50/80 border border-slate-200/80 space-y-2 shadow-2xs">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 mb-1">
-            <UserCheck className="w-4 h-4 text-indigo-600" />
+        <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E8E4DC] space-y-2">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#44403C] flex items-center gap-1.5">
+            <UserCheck className="w-4 h-4 text-[#CC785C]" />
             Khách hàng
           </label>
           <select
             value={selectedCustomerId}
             onChange={(e) => setSelectedCustomerId(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-2xl border border-slate-200 bg-white text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-2xs"
+            className="w-full px-3.5 py-2 rounded-xl border border-[#E8E4DC] bg-white text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20 focus:border-[#CC785C]"
           >
             {customers.map((c) => (
               <option key={c.id} value={c.id}>
@@ -213,22 +213,22 @@ export function EditOrderModal({
         {/* Danh sách sản phẩm */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-              <Package className="w-4 h-4 text-indigo-600" />
+            <span className="text-xs font-bold uppercase tracking-wider text-[#44403C] flex items-center gap-1.5">
+              <Package className="w-4 h-4 text-[#CC785C]" />
               Sản phẩm trong đơn ({items.length})
             </span>
 
             <button
               type="button"
               onClick={handleAddItem}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100/80 px-3 py-1.5 rounded-xl border border-indigo-100 transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[#CC785C] hover:text-[#BA664A] hover:bg-[#FAF2EE] px-2.5 py-1 rounded-lg transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ Thêm mặt hàng</span>
             </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {items.map((item, index) => {
               const lineTotal = item.price * item.quantity;
               const prod = products.find((p) => p.id === item.productId);
@@ -238,13 +238,13 @@ export function EditOrderModal({
               return (
                 <div
                   key={index}
-                  className="p-4 rounded-2xl border border-slate-200/80 bg-white space-y-2 shadow-2xs hover:border-slate-300 transition-all"
+                  className="p-3.5 rounded-xl border border-[#E8E4DC] bg-white space-y-2"
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
                     {/* Sản phẩm Combobox tìm kiếm thông minh */}
                     <div className="sm:col-span-5">
-                      <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                        Sản phẩm (Tìm theo tên / SKU)
+                      <label className="block text-[11px] font-semibold text-[#78716C] mb-1">
+                        Sản phẩm (Gõ để tìm nhanh)
                       </label>
                       <ProductCombobox
                         products={products}
@@ -257,7 +257,7 @@ export function EditOrderModal({
 
                     {/* Số lượng */}
                     <div className="sm:col-span-2">
-                      <label className="block text-[11px] font-bold text-slate-500 mb-1">
+                      <label className="block text-[11px] font-semibold text-[#78716C] mb-1">
                         Số lượng
                       </label>
                       <input
@@ -267,13 +267,13 @@ export function EditOrderModal({
                         onChange={(e) =>
                           handleQuantityChange(index, e.target.value)
                         }
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs sm:text-sm text-center font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        className="w-full px-2.5 py-2 rounded-xl border border-[#E8E4DC] text-xs sm:text-sm text-center font-bold focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20"
                       />
                     </div>
 
                     {/* Đơn giá */}
                     <div className="sm:col-span-2">
-                      <label className="block text-[11px] font-bold text-slate-500 mb-1">
+                      <label className="block text-[11px] font-semibold text-[#78716C] mb-1">
                         Đơn giá (VNĐ)
                       </label>
                       <input
@@ -284,17 +284,17 @@ export function EditOrderModal({
                         onChange={(e) =>
                           handlePriceChange(index, e.target.value)
                         }
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        className="w-full px-2.5 py-2 rounded-xl border border-[#E8E4DC] text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20"
                       />
                     </div>
 
                     {/* Thành tiền & Nút xóa dòng */}
                     <div className="sm:col-span-3 flex items-center justify-between sm:justify-end gap-2 pt-1 sm:pt-4">
                       <div className="text-right">
-                        <span className="text-[10px] text-slate-400 block sm:hidden">
+                        <span className="text-[10px] text-[#78716C] block sm:hidden">
                           Thành tiền:
                         </span>
-                        <span className="text-xs sm:text-sm font-extrabold text-slate-900 tabular-nums">
+                        <span className="text-xs sm:text-sm font-bold text-[#191716] tabular-nums">
                           {formatCurrency(lineTotal)}
                         </span>
                       </div>
@@ -303,7 +303,7 @@ export function EditOrderModal({
                         <button
                           type="button"
                           onClick={() => handleRemoveItem(index)}
-                          className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                          className="p-1.5 text-[#A8A296] hover:text-[#B91C1C] hover:bg-[#FEF2F2] rounded-lg transition-colors"
                           title="Xóa dòng này"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -314,8 +314,8 @@ export function EditOrderModal({
 
                   {/* Cảnh báo tồn kho */}
                   {isStockShortage && (
-                    <div className="text-[11px] text-amber-600 font-bold flex items-center gap-1.5 pt-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <div className="text-[11px] text-[#B45309] font-medium flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5" />
                       <span>
                         Lưu ý: Kho hiện chỉ còn <b>{currentStock}</b> cái. Bạn cần bổ sung tồn kho trước khi đổi trạng thái sang Giao hàng (DELIVERED).
                       </span>
@@ -328,38 +328,36 @@ export function EditOrderModal({
         </div>
 
         {/* Tổng thanh toán mới */}
-        <div className="p-5 rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-600 text-white flex items-center justify-between shadow-lg shadow-indigo-500/25">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-white/15 backdrop-blur-md">
-              <Receipt className="w-6 h-6 text-white" />
-            </div>
+        <div className="p-4 rounded-2xl bg-[#FAF2EE] border border-[#F5E4DB] text-[#191716] flex items-center justify-between shadow-2xs">
+          <div className="flex items-center gap-2">
+            <Receipt className="w-5 h-5 text-[#CC785C]" />
             <div>
-              <p className="text-xs font-bold text-indigo-100">
+              <p className="text-xs font-semibold text-[#191716]">
                 Tổng tiền đơn hàng mới
               </p>
-              <p className="text-[11px] text-indigo-200">
+              <p className="text-[11px] text-[#78716C]">
                 Đã tự động tính lại theo danh sách sản phẩm
               </p>
             </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums">
+          <div className="font-serif text-2xl font-bold text-[#CC785C] tracking-tight tabular-nums">
             {formatCurrency(totalAmount)}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#F5F2EB]">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition-all"
+            className="px-4 py-2 rounded-xl border border-[#E8E4DC] text-[#44403C] hover:bg-[#F5F2EB] text-xs font-semibold"
           >
             Hủy bỏ
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold shadow-lg shadow-indigo-500/25 disabled:opacity-50 transition-all active:scale-95"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-[#CC785C] hover:bg-[#BA664A] text-white text-xs font-semibold shadow-xs disabled:opacity-50 transition-all active:scale-95"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             <span>Lưu thay đổi đơn hàng</span>

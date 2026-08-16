@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,23 +6,27 @@
 
 @layer base {
   :root {
-    --background: #f8fafc;
-    --foreground: #0f172a;
-    --card: #ffffff;
-    --card-foreground: #0f172a;
-    --border: #e2e8f0;
-    --primary: #4f46e5;
-    --primary-foreground: #ffffff;
+    --background: #FAF8F5;
+    --foreground: #191716;
+    --card: #FFFFFF;
+    --card-foreground: #191716;
+    --border: #E8E4DC;
+    --primary: #CC785C;
+    --primary-foreground: #FFFFFF;
   }
 }
 
 body {
-  color: var(--foreground);
-  background-color: #f8fafc;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #191716;
+  background-color: #FAF8F5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.01em;
+}
+
+/* Claude Editorial Serif for titles & headings */
+.font-claude-serif {
+  font-family: 'Newsreader', Georgia, Cambria, "Times New Roman", serif;
 }
 
 /* Tabular figures for numbers, money, and dates */
@@ -30,10 +34,10 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Custom modern scrollbars */
+/* Clean lightweight scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -41,61 +45,40 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #D6D1C7;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #B8B2A6;
 }
 
-/* Glassmorphism & Card Utilities */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+/* Claude Style Warm Cards - Fast, lightweight rendering with 0 GPU lag */
+.claude-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E4DC;
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(25, 23, 22, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.dark-glass {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.claude-card:hover {
+  border-color: #D3CDC2;
+  box-shadow: 0 4px 12px 0 rgba(25, 23, 22, 0.05);
 }
 
-.bento-card {
-  background: #ffffff;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 1.25rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+/* Claude Terracotta Accent Button */
+.btn-claude {
+  background-color: #CC785C;
+  color: #FFFFFF;
+  font-weight: 600;
+  transition: all 0.15s ease;
 }
 
-.bento-card:hover {
-  border-color: rgba(203, 213, 225, 0.9);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+.btn-claude:hover {
+  background-color: #BA664A;
 }
 
-/* Ambient glow highlights */
-.glow-blue {
-  box-shadow: 0 0 50px -10px rgba(59, 130, 246, 0.15);
-}
-
-.glow-indigo {
-  box-shadow: 0 0 50px -10px rgba(99, 102, 241, 0.15);
-}
-
-.glow-emerald {
-  box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.15);
-}
-
-/* Shimmer animation */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite;
+.btn-claude:active {
+  transform: scale(0.98);
 }

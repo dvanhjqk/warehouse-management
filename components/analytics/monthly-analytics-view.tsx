@@ -2,462 +2,326 @@
 
 import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { MonthlyAnalyticsData } from "@/app/actions/analytics-actions";
-import { formatCurrency, cn } from "@/lib/utils";
 import {
-  TrendingUp,
+  MonthlyAnalyticsData,
+  MonthlyProductSales,
+} from "@/app/actions/analytics-actions";
+import { formatCurrency } from "@/lib/utils";
+import {
   DollarSign,
-  ShoppingBag,
+  TrendingUp,
   Package,
-  Layers,
   Calendar,
-  ChevronLeft,
-  ChevronRight,
-  BarChart2,
-  Receipt,
+  ShoppingBag,
   Award,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 
 interface MonthlyAnalyticsViewProps {
   initialData: MonthlyAnalyticsData;
 }
 
-export function MonthlyAnalyticsView({ initialData }: MonthlyAnalyticsViewProps) {
+export function MonthlyAnalyticsView({
+  initialData,
+}: MonthlyAnalyticsViewProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const [selectedYear, setSelectedYear] = useState(initialData.selectedYear);
-  const [selectedMonth, setSelectedMonth] = useState(initialData.selectedMonth);
+  const {
+    selectedYear,
+    selectedMonth,
+    totalRevenue,
+    completedOrdersCount,
+    totalItemsSold,
+    averageOrderValue,
+    productsSold,
+    yearlyTrends,
+    availableYears,
+  } = initialData;
 
-  const handleMonthChange = (month: number) => {
-    setSelectedMonth(month);
-    startTransition(() => {
-      router.push(`/analytics?year=${selectedYear}&month=${month}`);
-    });
-  };
+  const [currentYear, setCurrentYear] = useState(selectedYear);
 
   const handleYearChange = (year: number) => {
-    setSelectedYear(year);
+    setCurrentYear(year);
     startTransition(() => {
       router.push(`/analytics?year=${year}&month=${selectedMonth}`);
     });
   };
 
-  const handlePrevMonth = () => {
-    if (selectedMonth === 1) {
-      const newYear = selectedYear - 1;
-      setSelectedYear(newYear);
-      setSelectedMonth(12);
-      startTransition(() => {
-        router.push(`/analytics?year=${newYear}&month=12`);
-      });
-    } else {
-      const newMonth = selectedMonth - 1;
-      setSelectedMonth(newMonth);
-      startTransition(() => {
-        router.push(`/analytics?year=${selectedYear}&month=${newMonth}`);
-      });
-    }
-  };
-
-  const handleNextMonth = () => {
-    if (selectedMonth === 12) {
-      const newYear = selectedYear + 1;
-      setSelectedYear(newYear);
-      setSelectedMonth(1);
-      startTransition(() => {
-        router.push(`/analytics?year=${newYear}&month=1`);
-      });
-    } else {
-      const newMonth = selectedMonth + 1;
-      setSelectedMonth(newMonth);
-      startTransition(() => {
-        router.push(`/analytics?year=${selectedYear}&month=${newMonth}`);
-      });
-    }
+  const handleMonthChange = (month: number) => {
+    startTransition(() => {
+      router.push(`/analytics?year=${currentYear}&month=${month}`);
+    });
   };
 
   const maxYearlyRevenue = Math.max(
-    ...initialData.yearlyTrends.map((t) => t.revenue),
+    ...yearlyTrends.map((t) => t.revenue),
     1
   );
 
+  const yearlyTotalRevenue = yearlyTrends.reduce((sum, t) => sum + t.revenue, 0);
+  const yearlyTotalOrders = yearlyTrends.reduce((sum, t) => sum + t.ordersCount, 0);
+
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Header Banner & Month Navigator */}
-      <div className="bento-card p-6 space-y-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 mb-2">
-              <BarChart2 className="w-3.5 h-3.5 text-indigo-600" />
-              Báo cáo hiệu quả kinh doanh
-            </span>
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-              Thống Kê Doanh Thu & Mặt Hàng Đã Bán Theo Tháng
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">
-              Phân tích chi tiết doanh thu thực tế và số lượng từng mặt hàng bán được trong tháng
-            </p>
-          </div>
-
-          {/* Month / Year Navigator Controls */}
-          <div className="flex items-center gap-2 self-start md:self-auto bg-slate-50 p-1.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-            <button
-              onClick={handlePrevMonth}
-              title="Tháng trước"
-              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-white transition-all shadow-2xs"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-white rounded-xl border border-slate-200 shadow-2xs font-extrabold text-xs sm:text-sm text-slate-900">
-              <Calendar className="w-4 h-4 text-indigo-600" />
-              <span>
-                Tháng {selectedMonth}/{selectedYear}
-              </span>
+    <div className="space-y-6">
+      {/* Header with Year Selector */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#191716] tracking-tight flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-[#FAF2EE] text-[#CC785C] border border-[#F5E4DB]">
+              <Calendar className="w-5 h-5" />
             </div>
-
-            <button
-              onClick={handleNextMonth}
-              title="Tháng tiếp theo"
-              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-white transition-all shadow-2xs"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-
-            {/* Year selector dropdown */}
-            <select
-              value={selectedYear}
-              onChange={(e) => handleYearChange(parseInt(e.target.value, 10))}
-              className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-800 focus:outline-none shadow-2xs cursor-pointer"
-            >
-              {initialData.availableYears.map((yr) => (
-                <option key={yr} value={yr}>
-                  Năm {yr}
-                </option>
-              ))}
-            </select>
-          </div>
+            <span>Báo Cáo Doanh Thu Tháng {selectedMonth}/{currentYear}</span>
+          </h1>
+          <p className="text-xs sm:text-sm text-[#78716C] mt-1">
+            Tổng hợp doanh thu thực tế và sản lượng các mặt hàng đã giao thành công
+          </p>
         </div>
 
-        {/* 12 Months Fast Selector Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-2 border-t border-slate-100">
-          {Array.from({ length: 12 }, (_, i) => {
-            const m = i + 1;
-            const isSelected = m === selectedMonth;
-            const trend = initialData.yearlyTrends.find((t) => t.month === m);
-            const hasRevenue = trend && trend.revenue > 0;
+        {/* Year Selector */}
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-semibold text-[#78716C]">
+            Chọn năm:
+          </label>
+          <select
+            value={currentYear}
+            onChange={(e) => handleYearChange(parseInt(e.target.value, 10))}
+            className="px-3.5 py-1.5 rounded-xl border border-[#E8E4DC] bg-white text-xs font-bold text-[#191716] focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20 shadow-claude-xs"
+          >
+            {availableYears.map((y) => (
+              <option key={y} value={y}>
+                Năm {y}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* 12-Month Quick Selector Pill Tabs */}
+      <div className="p-2.5 rounded-2xl bg-white border border-[#E8E4DC] shadow-claude-xs">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          {yearlyTrends.map((t) => {
+            const isSelected = t.month === selectedMonth;
+            const hasRevenue = t.revenue > 0;
 
             return (
               <button
-                key={m}
-                onClick={() => handleMonthChange(m)}
-                className={cn(
-                  "px-3.5 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 flex-1 min-w-[76px] justify-center",
+                key={t.month}
+                onClick={() => handleMonthChange(t.month)}
+                className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex flex-col items-center gap-0.5 flex-1 min-w-[65px] ${
                   isSelected
-                    ? "bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md shadow-indigo-500/25 ring-1 ring-white/20"
-                    : hasRevenue
-                    ? "bg-indigo-50/70 text-indigo-900 hover:bg-indigo-100/70 border border-indigo-100"
-                    : "bg-slate-50 text-slate-500 hover:bg-slate-100 border border-transparent"
-                )}
+                    ? "bg-[#FAF2EE] text-[#9B5038] border border-[#F5E4DB] shadow-2xs font-bold"
+                    : "text-[#78716C] hover:text-[#191716] hover:bg-[#FAF8F5] border border-transparent"
+                }`}
               >
-                <span>Tháng {m}</span>
-                {hasRevenue && !isSelected && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                )}
+                <span>Tháng {t.month}</span>
+                <span
+                  className={`text-[10px] tabular-nums font-bold ${
+                    hasRevenue
+                      ? isSelected
+                        ? "text-[#CC785C]"
+                        : "text-emerald-700"
+                      : "text-[#A8A296]"
+                  }`}
+                >
+                  {hasRevenue ? `${Math.round(t.revenue / 1000)}k` : "0đ"}
+                </span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* 4 Core Monthly KPI Cards */}
+      {/* 4 Selected Month KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Doanh thu tháng */}
-        <div className="bento-card p-5 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Doanh thu Tháng {selectedMonth}
-            </span>
-            <div className="p-2.5 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-2xs">
-              <DollarSign className="w-5 h-5" />
+        <div className="p-5 rounded-2xl bg-white border border-[#E8E4DC] shadow-claude-xs space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#78716C]">
+            <span>Doanh thu Tháng {selectedMonth}</span>
+            <div className="p-2 rounded-xl bg-[#FAF2EE] text-[#CC785C] border border-[#F5E4DB]">
+              <DollarSign className="w-4 h-4" />
             </div>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-700 tracking-tight tabular-nums">
-            {formatCurrency(initialData.totalRevenue)}
-          </h3>
-          <p className="text-[11px] text-slate-400 font-medium">
-            Từ các đơn hàng đã giao thành công (DELIVERED)
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-[#191716] tracking-tight tabular-nums">
+            {formatCurrency(totalRevenue)}
+          </p>
+          <p className="text-[11px] text-[#78716C]">
+            Từ các đơn ĐÃ GIAO
           </p>
         </div>
 
         {/* Số đơn hoàn tất */}
-        <div className="bento-card p-5 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Đơn hàng hoàn tất
-            </span>
-            <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-2xs">
-              <ShoppingBag className="w-5 h-5" />
+        <div className="p-5 rounded-2xl bg-white border border-[#E8E4DC] shadow-claude-xs space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#78716C]">
+            <span>Số đơn hoàn tất</span>
+            <div className="p-2 rounded-xl bg-[#F0FDF4] text-[#15803D] border border-[#BBF7D0]">
+              <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums">
-            {initialData.completedOrdersCount} đơn
-          </h3>
-          <p className="text-[11px] text-slate-400 font-medium">
-            Đã xuất kho và giao tận tay khách
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-[#191716] tracking-tight tabular-nums">
+            {completedOrdersCount} đơn
+          </p>
+          <p className="text-[11px] text-[#78716C]">
+            Giao hàng thành công
           </p>
         </div>
 
-        {/* Số lượng hàng đã bán */}
-        <div className="bento-card p-5 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Số lượng hàng đã bán
-            </span>
-            <div className="p-2.5 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 shadow-2xs">
-              <Package className="w-5 h-5" />
+        {/* Số lượng sản phẩm bán ra */}
+        <div className="p-5 rounded-2xl bg-white border border-[#E8E4DC] shadow-claude-xs space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#78716C]">
+            <span>Mặt hàng xuất kho</span>
+            <div className="p-2 rounded-xl bg-[#FAF2EE] text-[#CC785C] border border-[#F5E4DB]">
+              <Package className="w-4 h-4" />
             </div>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-purple-700 tracking-tight tabular-nums">
-            {initialData.totalItemsSold} cái
-          </h3>
-          <p className="text-[11px] text-slate-400 font-medium">
-            Tổng sản phẩm đã trừ tồn kho
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-[#191716] tracking-tight tabular-nums">
+            {totalItemsSold} cái
+          </p>
+          <p className="text-[11px] text-[#78716C]">
+            Tổng số lượng các mặt hàng
           </p>
         </div>
 
-        {/* Giá trị đơn trung bình (AOV) */}
-        <div className="bento-card p-5 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Giá trị đơn TB (AOV)
-            </span>
-            <div className="p-2.5 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 shadow-2xs">
-              <Receipt className="w-5 h-5" />
+        {/* Giá trị trung bình đơn */}
+        <div className="p-5 rounded-2xl bg-white border border-[#E8E4DC] shadow-claude-xs space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#78716C]">
+            <span>Giá trị trung bình / đơn</span>
+            <div className="p-2 rounded-xl bg-[#F0F7FF] text-[#2563EB] border border-[#BFDBFE]">
+              <ShoppingBag className="w-4 h-4" />
             </div>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-amber-700 tracking-tight tabular-nums">
-            {formatCurrency(initialData.averageOrderValue)}
-          </h3>
-          <p className="text-[11px] text-slate-400 font-medium">
-            Doanh thu trung bình trên mỗi đơn
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-[#191716] tracking-tight tabular-nums">
+            {formatCurrency(averageOrderValue)}
+          </p>
+          <p className="text-[11px] text-[#78716C]">
+            Doanh thu / Tổng số đơn
           </p>
         </div>
       </div>
 
-      {/* Biểu đồ trực quan so sánh xu hướng 12 tháng trong năm */}
-      <div className="bento-card p-6 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-2xs">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-extrabold text-slate-900 text-base tracking-tight">
-                Xu hướng doanh thu các tháng năm {selectedYear}
+      {/* 2-Column: 12-Month Bar Chart + Top Products Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Biểu đồ cột 12 tháng (7 cols) */}
+        <div className="lg:col-span-7 rounded-2xl bg-white border border-[#E8E4DC] p-6 space-y-4 shadow-claude-xs">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-[#CC785C]" />
+              <h3 className="font-serif font-bold text-[#191716] text-base">
+                Biểu đồ doanh thu 12 tháng năm {currentYear}
               </h3>
-              <p className="text-xs text-slate-500 font-medium">
-                So sánh doanh thu thực tế giữa 12 tháng trong năm {selectedYear}
-              </p>
             </div>
+            <span className="text-xs font-bold text-[#78716C] tabular-nums">
+              Tổng năm: {formatCurrency(yearlyTotalRevenue)}
+            </span>
           </div>
 
-          <span className="text-xs font-extrabold text-slate-700 bg-slate-100 px-3.5 py-1.5 rounded-2xl border border-slate-200/70 shadow-2xs">
-            Tổng cả năm:{" "}
-            <b className="text-emerald-600 tabular-nums">
-              {formatCurrency(
-                initialData.yearlyTrends.reduce((s, t) => s + t.revenue, 0)
-              )}
-            </b>
-          </span>
-        </div>
-
-        {/* 12 Months Visual Bar Chart */}
-        <div className="pt-6 pb-2">
-          <div className="grid grid-cols-12 gap-1.5 sm:gap-3 items-end h-52 border-b border-slate-100 pb-2">
-            {initialData.yearlyTrends.map((trend) => {
-              const isCurrent = trend.month === selectedMonth;
+          {/* Bar chart visualization */}
+          <div className="h-64 pt-6 flex items-end justify-between gap-1 sm:gap-2 border-b border-[#E8E4DC] pb-2">
+            {yearlyTrends.map((item) => {
               const heightPercent =
                 maxYearlyRevenue > 0
-                  ? Math.max((trend.revenue / maxYearlyRevenue) * 100, 6)
-                  : 6;
+                  ? Math.max((item.revenue / maxYearlyRevenue) * 100, 4)
+                  : 4;
+              const isSelected = item.month === selectedMonth;
 
               return (
                 <div
-                  key={trend.month}
-                  onClick={() => handleMonthChange(trend.month)}
-                  className="flex flex-col items-center gap-2 group cursor-pointer h-full justify-end"
+                  key={item.month}
+                  onClick={() => handleMonthChange(item.month)}
+                  className="flex-1 flex flex-col items-center gap-2 h-full justify-end group cursor-pointer"
                 >
                   {/* Tooltip on hover */}
-                  <div className="text-[10px] font-extrabold text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-950 text-white px-2.5 py-1 rounded-xl shadow-xl whitespace-nowrap mb-1 pointer-events-none hidden sm:block border border-slate-800">
-                    {formatCurrency(trend.revenue)} ({trend.ordersCount} đơn)
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold text-[#191716] bg-white px-1.5 py-0.5 rounded-md border border-[#E8E4DC] shadow-xs pointer-events-none whitespace-nowrap mb-1">
+                    {formatCurrency(item.revenue)}
                   </div>
 
-                  {/* Bar */}
-                  <div className="w-full bg-slate-100/80 rounded-2xl overflow-hidden flex flex-col justify-end h-36 p-0.5 border border-slate-200/40">
-                    <div
-                      style={{ height: `${heightPercent}%` }}
-                      className={cn(
-                        "w-full rounded-xl transition-all duration-300",
-                        isCurrent
-                          ? "bg-gradient-to-t from-indigo-600 to-blue-500 shadow-md shadow-indigo-500/30"
-                          : trend.revenue > 0
-                          ? "bg-gradient-to-t from-emerald-500 to-teal-400 group-hover:from-emerald-600 group-hover:to-teal-500"
-                          : "bg-slate-200/60"
-                      )}
-                    />
-                  </div>
+                  {/* The bar */}
+                  <div
+                    style={{ height: `${heightPercent}%` }}
+                    className={`w-full rounded-t-lg transition-all ${
+                      isSelected
+                        ? "bg-[#CC785C]"
+                        : item.revenue > 0
+                        ? "bg-[#E0AA94] hover:bg-[#CC785C]"
+                        : "bg-[#F5F2EB]"
+                    }`}
+                  />
 
-                  {/* Month Label */}
+                  {/* Label */}
                   <span
-                    className={cn(
-                      "text-[10px] sm:text-xs font-extrabold transition-colors",
-                      isCurrent
-                        ? "text-indigo-600 font-extrabold"
-                        : "text-slate-500 group-hover:text-slate-900"
-                    )}
+                    className={`text-[11px] font-bold ${
+                      isSelected
+                        ? "text-[#CC785C]"
+                        : "text-[#78716C] group-hover:text-[#191716]"
+                    }`}
                   >
-                    T{trend.month}
+                    T{item.month}
                   </span>
                 </div>
               );
             })}
           </div>
         </div>
-      </div>
 
-      {/* Bảng Chi Tiết Mặt Hàng Đã Bán Trong Tháng */}
-      <div className="bento-card p-6 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-2xs">
-              <Award className="w-5 h-5" />
-            </div>
+        {/* Top sản phẩm bán chạy nhất trong tháng (5 cols) */}
+        <div className="lg:col-span-5 rounded-2xl bg-white border border-[#E8E4DC] p-6 space-y-4 shadow-claude-xs">
+          <div className="flex items-center gap-2">
+            <Award className="w-4 h-4 text-[#CC785C]" />
             <div>
-              <h3 className="font-extrabold text-slate-900 text-base tracking-tight">
-                Xếp hạng mặt hàng đã bán trong Tháng {selectedMonth}/{selectedYear}
+              <h3 className="font-serif font-bold text-[#191716] text-base">
+                Mặt hàng bán chạy (Tháng {selectedMonth})
               </h3>
-              <p className="text-xs text-slate-500 font-medium">
-                Thống kê số lượng bán, doanh thu và tỷ trọng đóng góp của từng sản phẩm
+              <p className="text-xs text-[#78716C]">
+                Xếp hạng theo doanh số đóng góp
               </p>
             </div>
           </div>
 
-          <div className="text-xs text-slate-500 font-bold bg-slate-100/80 px-3 py-1.5 rounded-xl border border-slate-200/60">
-            Có <b className="text-indigo-600">{initialData.productsSold.length}</b> mặt hàng phát sinh doanh số
-          </div>
-        </div>
-
-        {initialData.productsSold.length === 0 ? (
-          <div className="p-16 text-center bg-slate-50/80 rounded-2xl border border-dashed border-slate-200 text-slate-400">
-            <Package className="w-12 h-12 mx-auto text-slate-300 mb-2" />
-            <p className="font-bold text-slate-700 text-sm">
-              Chưa có mặt hàng nào được bán trong Tháng {selectedMonth}/{selectedYear}
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              Doanh thu chỉ tính từ các đơn hàng có trạng thái ĐÃ GIAO (DELIVERED) trong tháng này.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto rounded-2xl border border-slate-100">
-            <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-slate-50/90 text-slate-500 font-bold text-[11px] uppercase tracking-wider border-b border-slate-100">
-                <tr>
-                  <th className="py-4 px-4 text-center">Hạng</th>
-                  <th className="py-4 px-4">Mặt hàng</th>
-                  <th className="py-4 px-4">Mã SKU</th>
-                  <th className="py-4 px-4 text-center">Số lượng đã bán</th>
-                  <th className="py-4 px-4">Doanh thu</th>
-                  <th className="py-4 px-4">Tỷ trọng đóng góp</th>
-                  <th className="py-4 px-4 text-right">Số đơn xuất hiện</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-                {initialData.productsSold.map((prod, index) => (
-                  <tr
-                    key={prod.productId}
-                    className="hover:bg-slate-50/80 transition-colors group"
+          {productsSold.length === 0 ? (
+            <div className="p-8 text-center bg-[#FAF8F5] rounded-xl border border-dashed border-[#E8E4DC] text-[#78716C]">
+              <Package className="w-8 h-8 mx-auto text-[#A8A296] mb-1" />
+              <p className="text-xs font-semibold text-[#191716]">
+                Chưa có dữ liệu bán hàng tháng {selectedMonth}
+              </p>
+              <p className="text-[11px] text-[#78716C] mt-0.5">
+                Các đơn hàng hoàn tất trong tháng này sẽ được thống kê tại đây.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
+              {productsSold.map((p, idx) => {
+                const medals = ["🥇", "🥈", "🥉"];
+                return (
+                  <div
+                    key={p.productId}
+                    className="p-3 rounded-xl border border-[#E8E4DC] bg-[#FAF8F5] hover:bg-white hover:border-[#CC785C]/40 transition-all flex items-center justify-between gap-3"
                   >
-                    <td className="py-4 px-4 text-center">
-                      <span
-                        className={cn(
-                          "w-6 h-6 rounded-full inline-flex items-center justify-center font-extrabold text-xs shadow-2xs",
-                          index === 0
-                            ? "bg-amber-100 text-amber-800 border border-amber-300"
-                            : index === 1
-                            ? "bg-slate-200 text-slate-800 border border-slate-300"
-                            : index === 2
-                            ? "bg-amber-50 text-amber-700 border border-amber-200"
-                            : "text-slate-400 font-mono"
-                        )}
-                      >
-                        {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`}
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-base shrink-0">
+                        {medals[idx] || `#${idx + 1}`}
                       </span>
-                    </td>
-
-                    {/* Tên sản phẩm */}
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
-                          <Package className="w-4 h-4" />
-                        </div>
-                        <span className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                          {prod.productName}
+                      <div className="truncate">
+                        <span className="font-semibold text-xs text-[#191716] block truncate">
+                          {p.productName}
+                        </span>
+                        <span className="text-[11px] text-[#78716C] tabular-nums">
+                          Đã bán: <b>{p.totalQuantitySold}</b> cái ({p.percentageOfTotal}%)
                         </span>
                       </div>
-                    </td>
+                    </div>
 
-                    {/* Mã SKU */}
-                    <td className="py-4 px-4 font-mono text-slate-500 text-xs">
-                      {prod.sku ? (
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold border border-slate-200/60">
-                          {prod.sku}
-                        </span>
-                      ) : (
-                        "--"
-                      )}
-                    </td>
-
-                    {/* Số lượng đã bán */}
-                    <td className="py-4 px-4 text-center">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-purple-50 text-purple-700 border border-purple-200">
-                        {prod.totalQuantitySold} cái
+                    <div className="text-right shrink-0">
+                      <span className="font-bold text-xs text-[#191716] tabular-nums block">
+                        {formatCurrency(p.totalRevenue)}
                       </span>
-                    </td>
-
-                    {/* Doanh thu */}
-                    <td className="py-4 px-4 font-extrabold text-emerald-600 text-sm tabular-nums">
-                      {formatCurrency(prod.totalRevenue)}
-                    </td>
-
-                    {/* Tỷ trọng đóng góp */}
-                    <td className="py-4 px-4 min-w-[150px]">
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex-1 bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200/40">
-                          <div
-                            style={{
-                              width: `${Math.min(prod.percentageOfTotal, 100)}%`,
-                            }}
-                            className="bg-gradient-to-r from-indigo-500 to-blue-500 h-full rounded-full"
-                          />
-                        </div>
-                        <span className="text-xs font-extrabold text-slate-700 shrink-0 tabular-nums">
-                          {prod.percentageOfTotal}%
-                        </span>
-                      </div>
-                    </td>
-
-                    {/* Số đơn hàng */}
-                    <td className="py-4 px-4 text-right font-extrabold text-slate-900 tabular-nums">
-                      {prod.ordersCount} đơn
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
