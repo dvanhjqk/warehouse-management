@@ -1,0 +1,56 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum OrderStatus {
+  PENDING    // Đang xử lý
+  SHIPPING   // Đang giao hàng
+  DELIVERED  // Đã giao (Trừ tồn kho)
+  CANCELLED  // Đã hủy
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  sku         String?     @unique
+  price       Float
+  stock       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  orderItems  OrderItem[]
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  address   String?
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id])
+  status      OrderStatus @default(PENDING)
+  totalAmount Float       @default(0)
+  items       OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
+}

@@ -1,0 +1,217 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Modal } from "@/components/ui/modal";
+import { createProduct, updateProduct } from "@/app/actions/product-actions";
+import { Product } from "@prisma/client";
+import { AlertCircle, Loader2 } from "lucide-react";
+
+interface ProductModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  product?: Product | null;
+  onSuccess?: () => void;
+}
+
+export function ProductModal({
+  isOpen,
+  onClose,
+  product,
+  onSuccess,
+}: ProductModalProps) {
+  const isEditing = !!product;
+
+  const [formData, setFormData] = useState({
+    name: "",
+    sku: "",
+    price: "",
+    stock: "",
+  });
+
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        name: product.name,
+        sku: product.sku || "",
+        price: product.price.toString(),
+        stock: product.stock.toString(),
+      });
+    } else {
+      setFormData({
+        name: "",
+        sku: "",
+        price: "",
+        stock: "0",
+      });
+    }
+    setError(null);
+  }, [product, isOpen]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const priceNum = parseFloat(formData.price);
+      const stockNum = parseInt(formData.stock, 10);
+
+      if (isNaN(priceNum) || priceNum < 0) {
+        setError("Giá bán phải là số hợp lệ không âm.");
+        setLoading(false);
+        return;
+      }
+
+      if (isNaN(stockNum) || stockNum < 0) {
+        setError("Số lượng tồn kho phải là số nguyên không âm.");
+        setLoading(false);
+        return;
+      }
+
+      let res;
+      if (isEditing && product) {
+        res = await updateProduct(product.id, {
+          name: formData.name,
+          sku: formData.sku || null,
+          price: priceNum,
+          stock: stockNum,
+        });
+      } else {
+        res = await createProduct({
+          name: formData.name,
+          sku: formData.sku || null,
+          price: priceNum,
+          stock: stockNum,
+        });
+      }
+
+      if (!res.success) {
+        setError(res.error || "Thao tác không thành công.");
+      } else {
+        onSuccess?.();
+        onClose();
+      }
+    } catch (err: unknown) {
+      setError((err as Error).message || "Có lỗi xảy ra.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEditing ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới"}
+      description={
+        isEditing
+          ? "Cập nhật thông tin chi tiết của sản phẩm trong kho"
+          : "Điền các thông tin để tạo mới một mặt hàng trong kho"
+      }
+      maxWidth="lg"
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2 animate-in fade-in">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* Tên sản phẩm */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">
+            Tên sản phẩm <span className="text-rose-500">*</span>
+          </label>
+          <input
+            type="text"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Ví dụ: Tai Nghe Bluetooth ANC Pro Max"
+            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-medium"
+          />
+        </div>
+
+        {/* Mã SKU */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">
+            Mã SKU (Mã phân loại duy nhất)
+          </label>
+          <input
+            type="text"
+            value={formData.sku}
+            onChange={(e) =>
+              setFormData({ ...formData, sku: e.target.value.toUpperCase() })
+            }
+            placeholder="Ví dụ: AUDIO-PRO-01"
+            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-mono"
+          />
+          <p className="text-[11px] text-slate-400 mt-1">
+            Để trống nếu bạn không sử dụng mã SKU.
+          </p>
+        </div>
+
+        {/* Giá & Tồn kho */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Giá bán (VNĐ) <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="number"
+              min="0"
+              step="1000"
+              required
+              value={formData.price}
+              onChange={(e) =>
+                setFormData({ ...formData, price: e.target.value })
+              }
+              placeholder="Ví dụ: 1450000"
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-semibold"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Số lượng tồn kho ban đầu <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="number"
+              min="0"
+              required
+              value={formData.stock}
+              onChange={(e) =>
+                setFormData({ ...formData, stock: e.target.value })
+              }
+              placeholder="0"
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-semibold"
+            />
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 mt-6">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold transition-colors"
+          >
+            Hủy bỏ
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-all disabled:opacity-50"
+          >
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+            <span>{isEditing ? "Lưu thay đổi" : "Tạo sản phẩm"}</span>
+          </button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
