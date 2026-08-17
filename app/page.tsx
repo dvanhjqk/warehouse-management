@@ -2,6 +2,7 @@ import React from "react";
 import { getDashboardStats } from "@/app/actions/dashboard-actions";
 import { StatCard } from "@/components/ui/stat-card";
 import { OrderStatusBadge } from "@/components/ui/badge";
+import { CheerUpWidget } from "@/components/ui/cheer-up-widget";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import Link from "next/link";
 import {
@@ -26,6 +27,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {/* Góc Năng Lượng & Lời Chúc Yêu Thương Dành Riêng Cho Vợ */}
+      <CheerUpWidget completedOrdersToday={stats.statusCounts.DELIVERED} />
+
       {/* Claude Editorial Welcome Banner */}
       <div className="rounded-2xl bg-[#FAF2EE] border border-[#F5E4DB] p-6 sm:p-7 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -226,7 +230,7 @@ export default async function DashboardPage() {
                   bgColor: "bg-[#F0F7FF] border-[#BFDBFE]",
                 },
                 {
-                  label: "Đã giao (DELIVERED)",
+                  label: "Đang giao (DELIVERED)",
                   count: stats.statusCounts.DELIVERED,
                   color: "bg-[#15803D]",
                   textColor: "text-[#166534]",

@@ -9,8 +9,7 @@ import {
   ShoppingBag,
   Users,
   BarChart3,
-  Sparkles,
-  ChevronRight,
+  Heart,
   ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -89,8 +88,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 MiniKho Pro
               </h1>
             </div>
-            <p className="text-[11px] text-[#A8A296] font-medium leading-none mt-0.5">
-              Claude Minimal Theme
+            <p className="text-[11px] text-rose-300 font-medium leading-none mt-0.5 flex items-center gap-1">
+              <span>Dành cho vợ yêu</span>
+              <Heart className="w-2.5 h-2.5 fill-rose-400 text-rose-400" />
             </p>
           </div>
         </div>
@@ -142,8 +142,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
           </div>
-          <p className="text-[10px] text-[#8A8477]">
-            Tối ưu siêu nhanh & mượt mà
+          <p className="text-[10px] text-[#A8A296] flex items-center gap-1">
+            <span>Chúc em buôn may bán đắt nha!</span>
+            <span>🌸</span>
           </p>
         </div>
       </aside>

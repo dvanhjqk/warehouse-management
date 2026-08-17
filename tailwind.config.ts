@@ -9,9 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Newsreader', 'Georgia', 'Cambria', 'serif'],
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace'],
+        serif: ["var(--font-newsreader)", "Newsreader", "Georgia", "serif"],
+        sans: ["var(--font-inter)", "Inter", "-apple-system", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
       },
       colors: {
         background: "var(--background)",
@@ -44,9 +44,11 @@ const config: Config = {
         },
       },
       boxShadow: {
-        'claude-xs': '0 1px 2px 0 rgba(25, 23, 22, 0.04)',
-        'claude-sm': '0 1px 3px 0 rgba(25, 23, 22, 0.06), 0 1px 2px -1px rgba(25, 23, 22, 0.04)',
-        'claude-md': '0 4px 12px -2px rgba(25, 23, 22, 0.08), 0 2px 6px -2px rgba(25, 23, 22, 0.04)',
+        "claude-xs": "0 1px 2px 0 rgba(25, 23, 22, 0.04)",
+        "claude-sm":
+          "0 1px 3px 0 rgba(25, 23, 22, 0.06), 0 1px 2px -1px rgba(25, 23, 22, 0.04)",
+        "claude-md":
+          "0 4px 12px -2px rgba(25, 23, 22, 0.08), 0 2px 6px -2px rgba(25, 23, 22, 0.04)",
       },
     },
   },
