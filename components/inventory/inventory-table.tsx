@@ -16,6 +16,7 @@ import {
 import { ProductModal } from "./product-modal";
 import { StockModal } from "./stock-modal";
 import { ProductOrdersModal } from "./product-orders-modal";
+import { ConfirmDeleteModal } from "@/components/ui/confirm-delete-modal";
 import { deleteProduct } from "@/app/actions/product-actions";
 
 interface InventoryTableProps {
@@ -34,7 +35,10 @@ export function InventoryTable({ initialProducts }: InventoryTableProps) {
     id: string;
     name: string;
   } | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // State xác nhận xóa sản phẩm
+  const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Lọc sản phẩm
@@ -47,16 +51,18 @@ export function InventoryTable({ initialProducts }: InventoryTableProps) {
     return matchesSearch && matchesStock;
   });
 
-  const handleDelete = async (id: string, name: string) => {
-    if (confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${name}"?`)) {
-      setDeletingId(id);
-      setDeleteError(null);
-      const res = await deleteProduct(id);
-      if (!res.success) {
-        setDeleteError(res.error || "Không thể xóa sản phẩm.");
-      }
-      setDeletingId(null);
+  const confirmDelete = async () => {
+    if (!deletingProduct) return;
+    setIsDeleting(true);
+    setDeleteError(null);
+
+    const res = await deleteProduct(deletingProduct.id);
+    if (!res.success) {
+      setDeleteError(res.error || "Không thể xóa sản phẩm.");
+    } else {
+      setDeletingProduct(null);
     }
+    setIsDeleting(false);
   };
 
   return (
@@ -237,14 +243,11 @@ export function InventoryTable({ initialProducts }: InventoryTableProps) {
                             <Boxes className="w-4 h-4" />
                           </button>
 
-                          {/* Xóa sản phẩm */}
+                          {/* Xóa sản phẩm với Modal xác nhận đẹp */}
                           <button
-                            disabled={deletingId === product.id}
-                            onClick={() =>
-                              handleDelete(product.id, product.name)
-                            }
+                            onClick={() => setDeletingProduct(product)}
                             title="Xóa sản phẩm"
-                            className="p-1.5 rounded-lg text-[#A8A296] hover:text-[#B91C1C] hover:bg-[#FEF2F2] transition-colors disabled:opacity-40"
+                            className="p-1.5 rounded-lg text-[#A8A296] hover:text-[#B91C1C] hover:bg-[#FEF2F2] transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -280,6 +283,18 @@ export function InventoryTable({ initialProducts }: InventoryTableProps) {
         onClose={() => setHistoryModalProduct(null)}
         productId={historyModalProduct?.id || null}
         productName={historyModalProduct?.name || ""}
+      />
+
+      {/* Cửa sổ xác nhận xóa sản phẩm cao cấp */}
+      <ConfirmDeleteModal
+        isOpen={!!deletingProduct}
+        onClose={() => setDeletingProduct(null)}
+        onConfirm={confirmDelete}
+        title="Xác nhận xóa mặt hàng"
+        itemType="sản phẩm"
+        itemName={deletingProduct?.name}
+        warningMessage="Toàn bộ thông tin tồn kho và giá của sản phẩm này sẽ bị xóa khỏi kho hàng."
+        isLoading={isDeleting}
       />
     </div>
   );

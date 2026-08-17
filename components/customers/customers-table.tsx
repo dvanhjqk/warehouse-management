@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { CustomerModal } from "./customer-modal";
 import { CustomerHistoryModal } from "./customer-history-modal";
+import { ConfirmDeleteModal } from "@/components/ui/confirm-delete-modal";
 import { deleteCustomer } from "@/app/actions/customer-actions";
 
 type CustomerWithOrders = Customer & {
@@ -39,7 +40,11 @@ export function CustomersTable({ initialCustomers }: CustomersTableProps) {
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [historyCustomer, setHistoryCustomer] =
     useState<CustomerWithOrders | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // State xác nhận xóa khách hàng
+  const [deletingCustomer, setDeletingCustomer] =
+    useState<CustomerWithOrders | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Filter customers
@@ -52,16 +57,19 @@ export function CustomersTable({ initialCustomers }: CustomersTableProps) {
     );
   });
 
-  const handleDelete = async (id: string, name: string) => {
-    if (confirm(`Bạn có chắc chắn muốn xóa khách hàng "${name}"?`)) {
-      setDeletingId(id);
-      setDeleteError(null);
-      const res = await deleteCustomer(id);
-      if (!res.success) {
-        setDeleteError(res.error || "Không thể xóa khách hàng.");
-      }
-      setDeletingId(null);
+  // Xác nhận xóa khách hàng từ Modal
+  const confirmDelete = async () => {
+    if (!deletingCustomer) return;
+    setIsDeleting(true);
+    setDeleteError(null);
+
+    const res = await deleteCustomer(deletingCustomer.id);
+    if (!res.success) {
+      setDeleteError(res.error || "Không thể xóa khách hàng.");
+    } else {
+      setDeletingCustomer(null);
     }
+    setIsDeleting(false);
   };
 
   return (
@@ -232,13 +240,11 @@ export function CustomersTable({ initialCustomers }: CustomersTableProps) {
                             <Edit2 className="w-4 h-4" />
                           </button>
 
+                          {/* Xóa khách hàng với Modal xác nhận đẹp */}
                           <button
-                            disabled={deletingId === customer.id}
-                            onClick={() =>
-                              handleDelete(customer.id, customer.name)
-                            }
+                            onClick={() => setDeletingCustomer(customer)}
                             title="Xóa khách hàng"
-                            className="p-1.5 rounded-lg text-[#A8A296] hover:text-[#B91C1C] hover:bg-[#FEF2F2] transition-colors disabled:opacity-40"
+                            className="p-1.5 rounded-lg text-[#A8A296] hover:text-[#B91C1C] hover:bg-[#FEF2F2] transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -267,6 +273,22 @@ export function CustomersTable({ initialCustomers }: CustomersTableProps) {
         isOpen={!!historyCustomer}
         onClose={() => setHistoryCustomer(null)}
         customer={historyCustomer}
+      />
+
+      {/* Cửa sổ xác nhận xóa khách hàng cao cấp */}
+      <ConfirmDeleteModal
+        isOpen={!!deletingCustomer}
+        onClose={() => setDeletingCustomer(null)}
+        onConfirm={confirmDelete}
+        title="Xác nhận xóa khách hàng"
+        itemType="khách hàng"
+        itemName={deletingCustomer?.name}
+        warningMessage={
+          deletingCustomer && deletingCustomer.orders.length > 0
+            ? `Khách hàng này đang có ${deletingCustomer.orders.length} đơn hàng liên kết. Bạn cần xóa hết các đơn hàng của khách trước khi xóa khách hàng.`
+            : "Toàn bộ thông tin liên hệ và lịch sử của khách hàng này sẽ bị xóa vĩnh viễn."
+        }
+        isLoading={isDeleting}
       />
     </div>
   );

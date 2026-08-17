@@ -21,6 +21,7 @@ import {
 import { CreateOrderModal } from "./create-order-modal";
 import { EditOrderModal } from "./edit-order-modal";
 import { OrderDetailModal } from "./order-detail-modal";
+import { ConfirmDeleteModal } from "@/components/ui/confirm-delete-modal";
 import {
   updateOrderStatus,
   deleteOrder,
@@ -54,7 +55,12 @@ export function OrdersTable({
     null
   );
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // State xác nhận xóa đơn hàng
+  const [deletingOrder, setDeletingOrder] = useState<OrderWithRelations | null>(
+    null
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Lọc đơn hàng theo từ khóa và trạng thái
@@ -88,21 +94,19 @@ export function OrdersTable({
     setUpdatingId(null);
   };
 
-  // Xóa đơn hàng
-  const handleDelete = async (id: string) => {
-    if (
-      confirm(
-        `Bạn có chắc chắn muốn xóa đơn hàng #${id.slice(-6).toUpperCase()}?`
-      )
-    ) {
-      setDeletingId(id);
-      setErrorMessage(null);
-      const res = await deleteOrder(id);
-      if (!res.success) {
-        setErrorMessage(res.error || "Không thể xóa đơn hàng.");
-      }
-      setDeletingId(null);
+  // Xác nhận xóa đơn hàng từ Modal
+  const confirmDelete = async () => {
+    if (!deletingOrder) return;
+    setIsDeleting(true);
+    setErrorMessage(null);
+
+    const res = await deleteOrder(deletingOrder.id);
+    if (!res.success) {
+      setErrorMessage(res.error || "Không thể xóa đơn hàng.");
+    } else {
+      setDeletingOrder(null);
     }
+    setIsDeleting(false);
   };
 
   const statusTabs = [
@@ -354,12 +358,11 @@ export function OrdersTable({
                             <Eye className="w-4 h-4" />
                           </button>
 
-                          {/* Xóa đơn hàng */}
+                          {/* Xóa đơn hàng với Modal xác nhận đẹp */}
                           <button
-                            disabled={deletingId === order.id}
-                            onClick={() => handleDelete(order.id)}
+                            onClick={() => setDeletingOrder(order)}
                             title="Xóa đơn hàng"
-                            className="p-1.5 rounded-lg text-[#A8A296] hover:text-[#B91C1C] hover:bg-[#FEF2F2] transition-colors disabled:opacity-40"
+                            className="p-1.5 rounded-lg text-[#A8A296] hover:text-[#B91C1C] hover:bg-[#FEF2F2] transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -398,6 +401,22 @@ export function OrdersTable({
           setViewingOrder(null);
           setEditingOrder(order);
         }}
+      />
+
+      {/* Cửa sổ xác nhận xóa đơn hàng cao cấp */}
+      <ConfirmDeleteModal
+        isOpen={!!deletingOrder}
+        onClose={() => setDeletingOrder(null)}
+        onConfirm={confirmDelete}
+        title="Xác nhận hủy & xóa đơn hàng"
+        itemType="đơn hàng"
+        itemName={
+          deletingOrder
+            ? `#${deletingOrder.id.slice(-6).toUpperCase()} (${deletingOrder.customer.name})`
+            : undefined
+        }
+        warningMessage="Nếu đơn hàng đã ở trạng thái ĐÃ GIAO (DELIVERED), số lượng sản phẩm trong kho sẽ được tự động hoàn trả."
+        isLoading={isDeleting}
       />
     </div>
   );
