@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
 import { createProduct, updateProduct } from "@/app/actions/product-actions";
 import { Product } from "@prisma/client";
+import { formatNumberInput, parseNumberInput } from "@/lib/utils";
 import { AlertCircle, Loader2, Package, Tag, DollarSign, Boxes } from "lucide-react";
 
 interface ProductModalProps {
@@ -36,7 +37,7 @@ export function ProductModal({
       setFormData({
         name: product.name,
         sku: product.sku || "",
-        price: product.price.toString(),
+        price: formatNumberInput(product.price),
         stock: product.stock.toString(),
       });
     } else {
@@ -56,7 +57,7 @@ export function ProductModal({
     setLoading(true);
 
     try {
-      const priceNum = parseFloat(formData.price);
+      const priceNum = parseNumberInput(formData.price);
       const stockNum = parseInt(formData.stock, 10);
 
       if (isNaN(priceNum) || priceNum < 0) {
@@ -164,18 +165,25 @@ export function ProductModal({
               <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
               Giá bán (VNĐ) <span className="text-rose-500">*</span>
             </label>
-            <input
-              type="number"
-              min="0"
-              step="1000"
-              required
-              value={formData.price}
-              onChange={(e) =>
-                setFormData({ ...formData, price: e.target.value })
-              }
-              placeholder="Ví dụ: 1450000"
-              className="w-full px-3.5 py-2 rounded-xl border border-[#E8E4DC] focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20 focus:border-[#CC785C] text-sm font-bold"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                inputMode="numeric"
+                required
+                value={formData.price}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    price: formatNumberInput(e.target.value),
+                  })
+                }
+                placeholder="Ví dụ: 1,450,000"
+                className="w-full pl-3.5 pr-8 py-2 rounded-xl border border-[#E8E4DC] focus:outline-none focus:ring-2 focus:ring-[#CC785C]/20 focus:border-[#CC785C] text-sm font-bold tabular-nums"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#78716C] font-semibold">
+                ₫
+              </span>
+            </div>
           </div>
 
           <div>

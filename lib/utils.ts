@@ -19,6 +19,26 @@ export function formatCurrency(amount: number): string {
 }
 
 /**
+ * Format chuỗi số nguyên có dấu phẩy phân cách hàng nghìn khi nhập ô input (ví dụ: 1,000,000)
+ */
+export function formatNumberInput(value: string | number | undefined | null): string {
+  if (value === undefined || value === null || value === "") return "";
+  const cleanStr = String(value).replace(/[^0-9]/g, "");
+  if (!cleanStr) return "";
+  return cleanStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+/**
+ * Chuyển chuỗi định dạng có dấu phẩy ("1,000,000") về dạng số
+ */
+export function parseNumberInput(value: string): number {
+  if (!value) return 0;
+  const cleanStr = value.replace(/[^0-9]/g, "");
+  const num = parseInt(cleanStr, 10);
+  return isNaN(num) ? 0 : num;
+}
+
+/**
  * Format ngày tháng sang định dạng tiếng Việt
  * Ví dụ: "15/08/2026, 21:30"
  */
@@ -47,7 +67,7 @@ export const ORDER_STATUS_CONFIG: Record<
   }
 > = {
   PENDING: {
-    label: "Đang xử lý",
+    label: "Chờ xử lý",
     description: "Đơn mới tiếp nhận, chờ đóng gói",
     badgeClass: "bg-amber-50 text-amber-700 border-amber-200 ring-amber-500/20",
     dotClass: "bg-amber-500",
